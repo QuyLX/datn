@@ -10,8 +10,7 @@ import dropItem from './_dropdownItem'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
 import { logout } from '../../../../redux/actions/auth'
-const TheHeaderDropdown = ({ auth:{user}, logout }) =>  
-user.username &&
+const TheHeaderDropdown = ({ logout }) =>  
 (
     <CDropdown
       inNav
@@ -20,7 +19,7 @@ user.username &&
     >
       <CDropdownToggle className="c-header-nav-link" caret={false}>
         <div >
-          {user.username}
+          Admin
         </div>
       </CDropdownToggle>
       <CDropdownMenu className="pt-0" placement="bottom-end">
@@ -49,12 +48,7 @@ user.username &&
 
 
 TheHeaderDropdown.propTypes = {
-  auth: PropTypes.object.isRequired,
   logout: PropTypes.func.isRequired,
 }
 
-const mapStateToProps = state => ({
-  auth: state.auth
-})
-
-export default connect(mapStateToProps, { logout })(TheHeaderDropdown)
+export default connect(null, { logout })(TheHeaderDropdown)

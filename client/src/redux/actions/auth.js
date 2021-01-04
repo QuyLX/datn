@@ -13,10 +13,11 @@ import {
 
 // loaduser
 export const loaduser = () => dispatch => {
-    let accessToken = localStorage.getItem("accessToken");
-    if (accessToken) {
-        setAuthToken(localStorage.accessToken)
-        let userData = jwtDecode(accessToken)
+    let token = localStorage.getItem("token");
+    if (token) {
+        console.log(token);
+        setAuthToken(localStorage.token)
+        let userData = jwtDecode(token)
         dispatch({
             type: USER_LOADED,
             payload: userData
@@ -25,17 +26,17 @@ export const loaduser = () => dispatch => {
 }
 
 // register user
-export const register = ({ username, password }) => async dispatch => {
+export const register = ({ name, email, password }) => async dispatch => {
     const config = {
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         }
     }
-    const body = { username, password };
+    const body = { name, email, password };
 
     try {
-        const res = await axios.post('https://server.makipos.net:3029/users', body, config);
+        const res = await axios.post('api/auth/register', body, config);
         dispatch({
             type: REGISTER_SUCCESS,
             payload: res.data
@@ -48,18 +49,16 @@ export const register = ({ username, password }) => async dispatch => {
 }
 
 // login 
-export const login = ({ username, password }) => async dispatch => {
-    const strategy = "local";
-    const authCode = false;
+export const login = ({ email, password }) => async dispatch => {
     const config = {
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json'
         }
     }
-    const body = JSON.stringify({ authCode, strategy, username, password });
+    const body = JSON.stringify({ email, password });
     try {
-        const res = await axios.post('http://server.makipos.net:3028/users/authentication?_v=1', body, config);
+        const res = await axios.post('api/auth/login', body, config);
         dispatch({
             type: LOGIN_SUCCESS,
             payload: res.data

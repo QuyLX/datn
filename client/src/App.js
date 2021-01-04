@@ -11,9 +11,6 @@ import { Provider } from 'react-redux'
 import { loaduser } from './redux/actions/auth'
 // import Toast from './containers/Shared/Toast/Toast';
 
-// if (localStorage.accessToken) {
-//   setAuthToken(localStorage.accessToken)
-// } 
 
 // Containers
 const TheLayout = React.lazy(() => import('./containers/DefaultLayout/TheLayout'));
@@ -26,7 +23,7 @@ const Register = React.lazy(() => import('./containers/RegisterPage/RegisterPage
 const App = () => {
   useEffect(() => {
     store.dispatch(loaduser())
-  })
+  }, [])
 
   return (
     <Router>

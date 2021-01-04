@@ -85,7 +85,7 @@ exports.updateDevice = asyncHandler(async (req, res, next) => {
     // Make sure user is inused this device or role is Admin
     if (req.user.role !== "admin" && users.users.includes(req.user.id) !== true) {
         return next(
-            new ErrorResponse(`User ${ req.user.id } is not authorized to update device ${ device._id}`),
+            new ErrorResponse(`User ${ req.user.id } is not authorized to update device ${ device._id }`),
             404
         );
     }
@@ -117,5 +117,41 @@ exports.deleteDevice = asyncHandler(async (req, res, next) => {
     res.status(200).json({
         success: true,
         data: {}
+    });
+});
+
+
+//  @desc   Control Device when role is Admin or user in used
+//  @route  PUT /api/devices/:id/control
+//  @access Private
+exports.controlDevice = asyncHandler(async (req, res, next) => {
+    let device = await Device.findById(req.params.id);
+
+    if (!device) {
+        return next(
+            new ErrorResponse(`No device with the id of ${ req.params.id }`),
+            404
+        );
+    }
+
+    const users = await Device.findById(req.params.id).select('users');
+
+    // Make sure user is inused this device or role is Admin
+    if (req.user.role !== "admin" && users.users.includes(req.user.id) !== true) {
+        return next(
+            new ErrorResponse(`User ${ req.user.id } is not authorized to update device ${ device._id }`),
+            404
+        );
+    }
+    const { state } = req.body
+
+    device = await Device.findByIdAndUpdate(req.params.id, { state }, {
+        new: true,
+        runValidators: true
+    });
+
+    res.status(200).json({
+        success: true,
+        data: device
     });
 });

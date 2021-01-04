@@ -9,7 +9,7 @@ import {
 } from '../constants';
 
 const initialState = {
-    accessToken: localStorage.getItem('accessToken'),
+    token: localStorage.getItem('token'),
     isAuthenticated: null,
     isLoaded: true,
     user: null
@@ -27,7 +27,7 @@ export default function (state = initialState, action) {
             };
         case REGISTER_SUCCESS:
         case LOGIN_SUCCESS:
-            localStorage.setItem('accessToken', payload.accessToken)
+            localStorage.setItem('token', payload.token)
             return {
                 ...state,
                 ...payload,
@@ -38,9 +38,9 @@ export default function (state = initialState, action) {
         case LOGIN_FAIL:
         case LOG_OUT:
         case AUTH_ERROR:
-            localStorage.removeItem('accessToken')
+            localStorage.removeItem('token')
             return {
-                accessToken: null,
+                token: null,
                 isAuthenticated: false,
                 isLoaded: false,
                 user: null

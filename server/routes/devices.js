@@ -1,6 +1,6 @@
 const express = require('express');
 const Device = require('../models/Device');
-const { getDevices, getDevice, addDevice, updateDevice, deleteDevice } = require('../controllers/devices');
+const { getDevices, getDevice, addDevice, updateDevice, deleteDevice, controlDevice } = require('../controllers/devices');
 const advancedResults = require('../middlewares/advancedResults');
 const { protect, authorize } = require('../middlewares/auth');
 
@@ -35,6 +35,10 @@ router
     .get(getDevice)
     .put(updateDevice)
     .delete(authorize("admin"), deleteDevice);
+
+router
+    .route('/:id/control')
+    .put(controlDevice)
 
 
 module.exports = router;

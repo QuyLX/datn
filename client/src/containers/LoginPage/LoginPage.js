@@ -26,16 +26,16 @@ const Login = ({ login, isAuthenticated }) => {
     setCheck(isAuthenticated)
   }, [isAuthenticated])
   const [form, setForm] = useState({
-    username: "",
+    email: "",
     password: ""
   })
-  const { username, password } = form
+  const { email, password } = form
   const onChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value })
   }
   const onSubmit = (e) => {
     e.preventDefault();
-    login({ username, password })
+    login({ email, password })
   }
   return (check === null ? <Spinner /> : (check ? <Redirect to="/dashboard" /> :
     <div className="c-app c-default-layout flex-row align-items-center">
@@ -56,10 +56,10 @@ const Login = ({ login, isAuthenticated }) => {
                       </CInputGroupPrepend>
                       <CInput
                         type="text"
-                        placeholder="Username"
-                        // autoComplete="username"
-                        name="username"
-                        value={username}
+                        placeholder="Email"
+                        // autoComplete="email"
+                        name="email"
+                        value={email}
                         onChange={e => onChange(e)}
                       />
                     </CInputGroup>
