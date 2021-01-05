@@ -12,7 +12,7 @@ const cors = require('cors');
 const connectDB = require('./config/db')
 const errorHandler = require('./middlewares/error');
 
-
+const connectBroker = require('../mqttBroker/connBroker')
 
 // Load env variable
 dotenv.config();
@@ -27,11 +27,8 @@ const histories = require('./routes/histories');
 const users = require('./routes/users');
 const auth = require('./routes/auth');
 
-
 const app = express();
-
 // Middleware
-
 // Body parser
 app.use(express.json());
 
@@ -90,3 +87,42 @@ process.on('unhandledRejection', (err, promise) => {
     server.close(() => process.exit(1));
 })
 
+/************************ CONNECTION TO MQTT BROKER AND MESSAGE HANDLING *******************/
+
+/* Connecting to mqtt broker */
+const mqttClient = connectBroker()
+
+/* QoS for messages */
+const mqttQoS = process.env.QOS
+
+/* Subscribe to topics and handle messages */
+mqttClient.on('connect', async () => {
+    console.log('Subscriber connected!')
+
+    try {
+        // logic here
+
+        /* Broker subscribes to messages from ESP8266 connected plants */
+        mqttClient.subscribe(subTopics, { qos: mqttQoS }, (error) => {
+            if (error) {
+                mqttClient.end()
+            }
+        })
+
+        /*
+         *  Client action on topic
+         */
+        mqttClient.on('message', async (topic, msgBuffer) => {
+            /* Get data value from bytes sent by esp */
+            // logic here
+
+            try {
+                // logic here
+            } catch (error) {
+                console.log(error)
+            }
+        })
+    } catch (error) {
+        console.log(error)
+    }
+})

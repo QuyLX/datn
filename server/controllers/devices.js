@@ -86,7 +86,7 @@ exports.updateDevice = asyncHandler(async (req, res, next) => {
     if (req.user.role !== "admin" && users.users.includes(req.user.id) !== true) {
         return next(
             new ErrorResponse(`User ${ req.user.id } is not authorized to update device ${ device._id }`),
-            404
+            401
         );
     }
     device = await Device.findByIdAndUpdate(req.params.id, req.body, {
@@ -139,7 +139,7 @@ exports.controlDevice = asyncHandler(async (req, res, next) => {
     // Make sure user is inused this device or role is Admin
     if (req.user.role !== "admin" && users.users.includes(req.user.id) !== true) {
         return next(
-            new ErrorResponse(`User ${ req.user.id } is not authorized to update device ${ device._id }`),
+            new ErrorResponse(`User ${ req.user.id } is not authorized to control device ${ device._id }`),
             404
         );
     }

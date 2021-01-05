@@ -8,7 +8,6 @@ import {
   CRow
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import { DocsLink } from 'src/reusable'
 
 const Buttons = () => {
   return (
@@ -16,7 +15,6 @@ const Buttons = () => {
       <CCard>
         <CCardHeader>
           Standard Buttons
-          <DocsLink name="-Button"/>
         </CCardHeader>
         <CCardBody>
           <CRow className="align-items-center">

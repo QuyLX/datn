@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { Link, Redirect } from 'react-router-dom'
 import {
   CButton,
@@ -15,16 +15,11 @@ import {
   CRow
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-import Spinner from '../../components/LoadingIndicator/Spinner'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { login } from '../../redux/actions/auth'
 
 const Login = ({ login, isAuthenticated }) => {
-  const [check, setCheck] = useState(isAuthenticated)
-  useEffect(() => {
-    setCheck(isAuthenticated)
-  }, [isAuthenticated])
   const [form, setForm] = useState({
     email: "",
     password: ""
@@ -37,7 +32,7 @@ const Login = ({ login, isAuthenticated }) => {
     e.preventDefault();
     login({ email, password })
   }
-  return (check === null ? <Spinner /> : (check ? <Redirect to="/dashboard" /> :
+  return ((isAuthenticated ? <Redirect to="/dashboard" /> :
     <div className="c-app c-default-layout flex-row align-items-center">
       <CContainer>
         <CRow className="justify-content-center">
@@ -57,7 +52,6 @@ const Login = ({ login, isAuthenticated }) => {
                       <CInput
                         type="text"
                         placeholder="Email"
-                        // autoComplete="email"
                         name="email"
                         value={email}
                         onChange={e => onChange(e)}
@@ -72,7 +66,6 @@ const Login = ({ login, isAuthenticated }) => {
                       <CInput
                         type="password"
                         placeholder="Password"
-                        // autoComplete="current-password"
                         name="password"
                         value={password}
                         onChange={e => onChange(e)}

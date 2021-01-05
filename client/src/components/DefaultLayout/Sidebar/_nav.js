@@ -15,11 +15,23 @@ export default [
     _children: [
       {
         _tag: 'CSidebarNavItem',
-        name: 'User',
+        name: 'User Management',
         to: '/users',
         icon: 'cil-user'
       }
     ],
-  }
+  },
+  {
+    _tag: 'CSidebarNavItem',
+    name: 'Devices',
+    to: '/devices',
+    icon: <CIcon name="cil-settings" customClasses="c-sidebar-nav-icon" />,
+  },
+  {
+    _tag: 'CSidebarNavItem',
+    name: 'Rooms',
+    to: '/rooms',
+    icon: <CIcon name="cil-home" customClasses="c-sidebar-nav-icon" />,
+  },
 ]
 

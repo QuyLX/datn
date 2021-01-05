@@ -1,10 +1,7 @@
 import React from 'react'
 import {
   CButton,
-  CCard,
-  CCardBody,
   CCardFooter,
-  CCardHeader,
   CCol,
   CForm,
   CFormGroup,

@@ -82,8 +82,6 @@ exports.updateUser = asyncHandler(async (req, res, next) => {
         });
     } else {
         // Update user
-        // Cant change role for user if role is moderator
-        if (req.user.role === "admin") {
             const user = await User.findByIdAndUpdate(req.params.id, req.body, {
                 new: true,
                 runValidators: true
@@ -92,18 +90,6 @@ exports.updateUser = asyncHandler(async (req, res, next) => {
                 succcess: true,
                 data: user
             })
-        } else {
-            const { name, email } = req.body
-            const user = await User.findByIdAndUpdate(req.params.id, { name, email }, {
-                new: true,
-                runValidators: true
-            });
-            res.status(200).json({
-                succcess: true,
-                data: user
-            })
-        }
-
     }
 });
 // @desc Delete user

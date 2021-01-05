@@ -9,14 +9,28 @@ const Device = require('../models/Device');
 // @access    Private
 exports.getSchedules = asyncHandler(async (req, res, next) => {
     if (req.params.deviceId) {
-        const users = await Device.findById(req.params.deviceId).populate('users').select('-devices');
-        if (users.includes(req.user.id) !== true && req.user.role === "user") {
-            return next(new ErrorResponse(`User with id ${ req.user.id } is not authorized`, 401))
+        let device = await Device.findById(req.params.deviceId);
+
+        if (!device) {
+            return next(
+                new ErrorResponse(`No device with the id of ${ req.params.id }`),
+                404
+            );
+        }
+
+        const users = await Device.findById(req.params.id).select('users');
+
+        // Make sure user is inused this device or role is Admin
+        if (req.user.role === "user" && users.users.includes(req.user.id) !== true) {
+            return next(
+                new ErrorResponse(`User ${ req.user.id } is not authorized`),
+                401
+            );
         }
         const schedules = await Schedule.find({ device: req.params.deviceId });
         return res.status(200).json({
             success: true,
-            count: reviews.length,
+            count: schedules.length,
             data: schedules
         });
     } else {
@@ -31,19 +45,17 @@ exports.getSchedules = asyncHandler(async (req, res, next) => {
 // @route     GET /api/schedules/:id
 // @access    Private
 exports.getSchedule = asyncHandler(async (req, res, next) => {
-    const users = await Device.findById(req.params.deviceId).populate('users').select('-devices');
-    if (req.user.role === "moderator" || users.includes(req.user.id) !== true) {
-        return next(new ErrorResponse(`User is not authorized`, 401))
-    }
     const schedule = await Schedule.findById(req.params.id).populate({
         path: 'device',
         select: 'name description'
     });
-
     if (!schedule) {
         return next(
             new ErrorResponse(`No schedule found with the id of ${ req.params.id }`, 404)
         );
+    }
+    if (req.user.role !== "admin" || req.user.id != schedule.user) {
+        return next(new ErrorResponse(`User is not authorized`, 401))
     }
 
     res.status(200).json({
@@ -78,22 +90,7 @@ exports.addSchedule = asyncHandler(async (req, res, next) => {
             404
         );
     }
-
-    const schedules = await Schedule.find({ device: req.params.deviceId });
-    // Validation for schedule, convert schedule to obj
-    let schedulesStr = JSON.parse(schedules);
-
-    schedulesStr.forEach(element => {
-        if (req.body.start > element.start || req.body.end < element.end) {
-            return next(
-                new ErrorResponse(
-                    `There was another schedule in that time frame`,
-                    400
-                )
-            );
-        }
-    });
-
+    const schedule = await Schedule.create(req.body)
 
     // const schedule = await Schedule.create(req.body);
 
@@ -115,10 +112,9 @@ exports.updateSchedule = asyncHandler(async (req, res, next) => {
         );
     }
 
-    // Make sure review belongs to user or user is admin
-    // if (review.user.toString() !== req.user.id && req.user.role !== 'admin') {
-    //     return next(new ErrorResponse(`Not authorized to update review`, 401));
-    // }
+    if (req.user.role !== "admin" || req.user.id != schedule.user) {
+        return next(new ErrorResponse(`User is not authorized`, 401))
+    }
 
     schedule = await Schedule.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
@@ -143,10 +139,12 @@ exports.deleteSchedule = asyncHandler(async (req, res, next) => {
         );
     }
 
-    // // Make sure review belongs to user or user is admin
-    // if (review.user.toString() !== req.user.id && req.user.role !== 'admin') {
-    //     return next(new ErrorResponse(`Not authorized to update review`, 401));
-    // }
+    // Make sure review belongs to user or user is admin
+
+    if (req.user.role !== "admin" || req.user.id != schedule.user) {
+        return next(new ErrorResponse(`User is not authorized`, 401))
+    }
+
 
     await schedule.remove();
 

@@ -18,7 +18,6 @@ import {
   CRow,
   CCallout
 } from '@coreui/react'
-import { DocsLink } from 'src/reusable'
 
 const ButtonGroups = () => {
   return (
@@ -27,7 +26,6 @@ const ButtonGroups = () => {
         <CCard>
           <CCardHeader>
             Callout
-            <DocsLink name="CCallout"/>
           </CCardHeader>
           <CCardBody>
             <CCallout color="primary">

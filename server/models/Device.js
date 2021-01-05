@@ -18,6 +18,9 @@ const DeviceSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Please add a icon name']
     },
+    state: {
+      type: String  
+    },
     createdAt: {
         type: Date,
         default: Date.now

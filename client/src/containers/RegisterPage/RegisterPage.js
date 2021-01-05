@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import {
   CButton,
   CCard,
@@ -12,24 +12,20 @@ import {
   CInputGroupText,
   CRow
 } from '@coreui/react'
-import { Link } from 'react-router-dom'
 import CIcon from '@coreui/icons-react'
-import Spinner from '../../components/LoadingIndicator/Spinner'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types';
+import {Redirect} from 'react-router-dom'
 import { register } from '../../redux/actions/auth'
 
-const RegisterPage = ({ isAuthenticated, register }) => {
-  const [check, setCheck] = useState(isAuthenticated)
-  useEffect(() => {
-    setCheck(isAuthenticated)
-  }, [isAuthenticated])
+const RegisterPage = ({isAuthenticated, register }) => {
   const [form, setForm] = useState({
-    username: "",
+    name: "",
+    email: "",
     password: "",
     password2: ""
   })
-  const { username, password, password2 } = form
+  const { name, email,password, password2 } = form
 
   const onChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value })
@@ -39,10 +35,11 @@ const RegisterPage = ({ isAuthenticated, register }) => {
     if (password !== password2) {
       alert("Please confirm true Password")
     } else {
-      register({ username, password })
+      register({ name, email, password })
     }
   }
-  return (check === null ? <Spinner /> :
+
+  return (isAuthenticated ? <Redirect to="/dashboard" /> :
     (
       <div className="c-app c-default-layout flex-row align-items-center">
         <CContainer>
@@ -62,8 +59,22 @@ const RegisterPage = ({ isAuthenticated, register }) => {
                       <CInput
                         type="text"
                         placeholder="Username"
-                        name="username"
-                        value={username}
+                        name="name"
+                        value={name}
+                        onChange={e => onChange(e)}
+                      />
+                    </CInputGroup>
+                    <CInputGroup className="mb-3">
+                      <CInputGroupPrepend>
+                        <CInputGroupText>
+                          <CIcon name="cil-user" />
+                        </CInputGroupText>
+                      </CInputGroupPrepend>
+                      <CInput
+                        type="email"
+                        placeholder="Email"
+                        name="email"
+                        value={email}
                         onChange={e => onChange(e)}
                       />
                     </CInputGroup>
@@ -98,11 +109,6 @@ const RegisterPage = ({ isAuthenticated, register }) => {
                     <CButton className="mb-4" type="submit" color="success" block>
                       Create Account
                       </CButton>
-                    <Link to="/login">
-                      <CButton type="submit" color="primary" block>
-                        Login now!
-                      </CButton>
-                    </Link>
                   </CForm>
                 </CCardBody>
               </CCard>

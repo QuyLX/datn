@@ -1,5 +1,4 @@
 import axios from 'axios'
-import jwtDecode from 'jwt-decode';
 import setAuthToken from '../../utils/setAuthToken'
 import {
     REGISTER_FAIL,
@@ -12,17 +11,22 @@ import {
 } from '../constants';
 
 // loaduser
-export const loaduser = () => dispatch => {
+export const loaduser = () => async dispatch => {
     let token = localStorage.getItem("token");
     if (token) {
-        console.log(token);
-        setAuthToken(localStorage.token)
-        let userData = jwtDecode(token)
-        dispatch({
-            type: USER_LOADED,
-            payload: userData
-        })
-    } else dispatch({ type: AUTH_ERROR })
+        setAuthToken(localStorage.token);
+        try {
+            const res = await axios.get('/api/auth/me');
+            dispatch({
+                type: USER_LOADED,
+                payload: res.data
+            })
+        } catch (err) {
+            dispatch({
+                type: AUTH_ERROR
+            })
+        }
+    }
 }
 
 // register user
@@ -41,6 +45,7 @@ export const register = ({ name, email, password }) => async dispatch => {
             type: REGISTER_SUCCESS,
             payload: res.data
         })
+        dispatch(loaduser())
     } catch (err) {
         dispatch({
             type: REGISTER_FAIL
@@ -72,8 +77,15 @@ export const login = ({ email, password }) => async dispatch => {
 }
 
 // logout
-export const logout = () => dispatch => {
-    dispatch({
-        type: LOG_OUT
-    })
+export const logout = () => async dispatch => {
+    try {
+        await axios.get('/api/auth/logout');
+        dispatch({
+            type: LOG_OUT
+        })
+    } catch (err) {
+        dispatch({
+            type: AUTH_ERROR
+        })
+    }
 }

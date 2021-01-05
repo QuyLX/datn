@@ -14,7 +14,7 @@ router.route('/')
 
 router.route('/:id')
     .get(authorize("admin", "moderator"), getUser)
-    .put(authorize("admin", "moderator"), updateUser)
+    .put(authorize("admin"), updateUser)
     .delete(deleteUser)
 
 
