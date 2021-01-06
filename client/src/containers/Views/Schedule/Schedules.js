@@ -11,7 +11,7 @@ import {
     CPagination
 } from '@coreui/react'
 
-import roomsData from './RoomData'
+import schedulesData from './ScheduleData'
 
 const getBadge = status => {
     switch (status) {
@@ -23,14 +23,14 @@ const getBadge = status => {
     }
 }
 
-const Rooms = () => {
+const Schedules = () => {
     const history = useHistory()
     const queryPage = useLocation().search.match(/page=([0-9]+)/, '')
     const currentPage = Number(queryPage && queryPage[1] ? queryPage[1] : 1)
     const [page, setPage] = useState(currentPage)
 
     const pageChange = newPage => {
-        currentPage !== newPage && history.push(`/rooms?page=${ newPage }`)
+        currentPage !== newPage && history.push(`/schedules?page=${ newPage }`)
     }
 
     useEffect(() => {
@@ -42,11 +42,11 @@ const Rooms = () => {
             <CCol xl={6}>
                 <CCard>
                     <CCardHeader>
-                        Rooms
+                        Schedules
                     </CCardHeader>
                     <CCardBody>
                         <CDataTable
-                            items={roomsData}
+                            items={schedulesData}
                             fields={[
                                 { key: 'name', _classes: 'font-weight-bold' },
                                 'registered', 'role', 'status'
@@ -56,7 +56,7 @@ const Rooms = () => {
                             itemsPerPage={5}
                             activePage={page}
                             clickableRows
-                            onRowClick={(item) => history.push(`/rooms/${ item.id }`)}
+                            onRowClick={(item) => history.push(`/schedules/${ item.id }`)}
                             scopedSlots={{
                                 'status':
                                     (item) => (
@@ -82,4 +82,4 @@ const Rooms = () => {
     )
 }
 
-export default Rooms
+export default Schedules

@@ -11,7 +11,6 @@ const Device = require('../models/Device');
 exports.getUsers = asyncHandler(async (req, res, next) => {
     if (req.params.deviceId) {
         const users = await Device.findById(req.params.deviceId).populate({ path: 'users', select: 'name' }).select("name");
-        console.log(users);
         if (!users) {
             return next(new ErrorResponse(`No users use this device`, 404))
         }

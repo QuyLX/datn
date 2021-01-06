@@ -18,8 +18,8 @@ const TheHeaderDropdown = ({ user, logout }) =>
     direction="down"
   >
     <CDropdownToggle className="c-header-nav-link" caret={false}>
-      <div >
-        {user.data.name}
+        <div >
+          <b>{user.data.name}</b>
       </div>
     </CDropdownToggle>
     <CDropdownMenu className="pt-0" placement="bottom-end">
@@ -31,8 +31,11 @@ const TheHeaderDropdown = ({ user, logout }) =>
       >
         Account
         </CDropdownItem>
-        <CDropdownItem onClick={logout} >
-          <CIcon name="cil-lock-locked" className="mfe-2" />
+        <CDropdownItem divider />
+        <CDropdownItem
+          onClick={logout}
+        >
+          <CIcon name="cil-lock-locked" className="mfe-4" />
           Lock Out
         </CDropdownItem>
     </CDropdownMenu>

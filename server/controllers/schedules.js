@@ -127,7 +127,7 @@ exports.updateSchedule = asyncHandler(async (req, res, next) => {
     });
 });
 
-// @desc      Delete review
+// @desc      Delete schedule
 // @route     DELETE /api/schedules/:id
 // @access    Private
 exports.deleteSchedule = asyncHandler(async (req, res, next) => {

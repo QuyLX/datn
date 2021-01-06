@@ -1,4 +1,4 @@
-import { SET_RESPONSIVE } from '../constants'
+import { SET_RESPONSIVE } from '../constants/responsive'
 
 export const changeState = (val) => dispatch => {
     dispatch({

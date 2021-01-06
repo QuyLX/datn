@@ -7,8 +7,11 @@ import {
     LOGIN_FAIL,
     LOG_OUT,
     USER_LOADED,
-    AUTH_ERROR
-} from '../constants';
+    AUTH_ERROR,
+    RESET_PASSWORD_FAIL,
+    RESET_PASSWORD_REQUEST,
+    RESET_PASSWORD_SUCCESS
+} from '../constants/userConstant';
 
 // loaduser
 export const loaduser = () => async dispatch => {
@@ -87,5 +90,22 @@ export const logout = () => async dispatch => {
         dispatch({
             type: AUTH_ERROR
         })
+    }
+}
+
+// Reset password
+export const resetPassword = (user, newPassword) => async dispatch => {
+    try {
+        dispatch({ type: RESET_PASSWORD_REQUEST });
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        }
+
+        const { data } = await axios.put(`/api/auth/resetpassword/:${ user._id }`, newPassword, config);
+        dispatch({ type: RESET_PASSWORD_SUCCESS, payload: data })
+    } catch (error) {
+        dispatch({ type: RESET_PASSWORD_FAIL, payload: error })
     }
 }

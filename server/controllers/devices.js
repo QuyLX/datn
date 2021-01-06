@@ -125,7 +125,7 @@ exports.deleteDevice = asyncHandler(async (req, res, next) => {
 //  @route  PUT /api/devices/:id/control
 //  @access Private
 exports.controlDevice = asyncHandler(async (req, res, next) => {
-    let device = await Device.findById(req.params.id);
+    let device = await Device.findById(req.params.id).select("+state");
 
     if (!device) {
         return next(

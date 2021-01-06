@@ -5,8 +5,11 @@ import {
     LOGIN_SUCCESS,
     LOG_OUT,
     USER_LOADED,
-    AUTH_ERROR
-} from '../constants';
+    AUTH_ERROR,
+    RESET_PASSWORD_FAIL,
+    RESET_PASSWORD_REQUEST,
+    RESET_PASSWORD_SUCCESS
+} from '../constants/userConstant';
 
 const initialState = {
     token: localStorage.getItem('token'),
@@ -21,7 +24,7 @@ export default function (state = initialState, action) {
         case USER_LOADED:
             return {
                 ...state,
-                user:payload,
+                user: payload,
                 isAuthenticated: true,
                 isLoaded: false,
             };
@@ -45,9 +48,20 @@ export default function (state = initialState, action) {
                 isLoaded: false,
                 user: null
             };
-
         default:
             return state;
     }
 
+}
+export const resetPassword = (state = {}, action) => {
+    switch (action.type) {
+        case RESET_PASSWORD_REQUEST:
+            return { loading: true }
+        case RESET_PASSWORD_SUCCESS:
+            return { loading: false, success: true }
+        case RESET_PASSWORD_FAIL:
+            return { loading: false, error: action.payload }
+        default:
+            return state
+    }
 }

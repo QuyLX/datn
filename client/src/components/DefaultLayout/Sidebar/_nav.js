@@ -33,5 +33,17 @@ export default [
     to: '/rooms',
     icon: <CIcon name="cil-home" customClasses="c-sidebar-nav-icon" />,
   },
+  {
+    _tag: 'CSidebarNavItem',
+    name: 'Schedules',
+    to: '/schedules',
+    icon: <CIcon name="cil-list" customClasses="c-sidebar-nav-icon" />,
+  },
+  {
+    _tag: 'CSidebarNavItem',
+    name: 'History System',
+    to: '/histories',
+    icon: <CIcon name="cil-notes" customClasses="c-sidebar-nav-icon" />,
+  },
 ]
 

@@ -1,4 +1,4 @@
-import { SET_RESPONSIVE } from '../constants'
+import { SET_RESPONSIVE } from '../constants/responsive'
 const initialState = {
   sidebarShow: 'responsive',
 }

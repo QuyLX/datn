@@ -3,6 +3,9 @@ import { logo } from './logo'
 import { logoNegative } from './logo-negative'
 
 import {
+  cilRain,
+  cilBolt,
+  cilCloudy,
   cibSkype,
   cibFacebook,
   cibTwitter,
@@ -126,7 +129,8 @@ import {
   cilUserUnfollow,
   cilX,
   cilXCircle,
-  cilWarning
+  cilWarning,
+  cilMemory
 } from '@coreui/icons'
 
 export const icons = Object.assign({}, {
@@ -134,6 +138,10 @@ export const icons = Object.assign({}, {
   logo,
   logoNegative
 }, {
+  cilRain,
+  cilBolt,
+  cilCloudy,
+  cilMemory,
   cilAlignCenter,
   cilAlignLeft,
   cilAlignRight,
