@@ -1,20 +1,21 @@
 /* Setup MQTT broker */
 const aedesOptions = { concurrency: 200, connectTimeout: 5000 }
 const aedes = require('aedes')(aedesOptions)
+const dotenv = require('dotenv');
+dotenv.config();
 
 /*******************************************************
  ****************** Initialize Broker ******************
  ******************************************************/
-
 /* Check for server port or run on local port 1883 */
-const PORT = process.env.PORT_BROKER || 1883
+const PORT_BROKER = process.env.PORT_BROKER || 1883
 
 /* Create MQTT client */
 const server = require('net').createServer(aedes.handle)
 
 /* Connect broker to port */
-server.listen(PORT, '0.0.0.0', () => {
-    console.log('Broker is listening on port ' + PORT)
+server.listen(PORT_BROKER, '0.0.0.0', () => {
+    console.log('Broker is listening on port ' + PORT_BROKER)
 })
 
 /*******************************************************

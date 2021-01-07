@@ -23,7 +23,7 @@ import {
 export const getSchedules = () => async dispatch => {
     try {
         dispatch({ type: SCHEDULE_LIST_REQUEST });
-        const data = await axios.get('/api/schedules');
+        const { data } = await axios.get('/api/schedules');
         dispatch({ type: SCHEDULE_LIST_SUCCESS, payload: data })
     } catch (error) {
         dispatch({ type: SCHEDULE_LIST_FAIL, payload: error })
@@ -33,7 +33,7 @@ export const getSchedules = () => async dispatch => {
 export const getSchedulesPerDevice = deviceId => async dispatch => {
     try {
         dispatch({ type: SCHEDULE_LIST_DEVICE_REQUEST });
-        const data = await axios.get(`/api/devices/:${ deviceId }/schedules`);
+        const { data } = await axios.get(`/api/devices/${ deviceId }/schedules`);
         dispatch({ type: SCHEDULE_LIST_DEVICE_SUCCESS, payload: data })
     } catch (error) {
         dispatch({ type: SCHEDULE_LIST_DEVICE_FAIL, payload: error })
@@ -43,7 +43,7 @@ export const getSchedulesPerDevice = deviceId => async dispatch => {
 export const getSchedule = id => async dispatch => {
     try {
         dispatch({ type: SCHEDULE_DETAILS_REQUEST });
-        const data = await axios.get(`/api/schedules/:${ id }`);
+        const { data } = await axios.get(`/api/schedules/${ id }`);
         dispatch({ type: SCHEDULE_DETAILS_SUCCESS, payload: data })
     } catch (error) {
         dispatch({ type: SCHEDULE_DETAILS_FAIL, payload: error })
@@ -60,7 +60,7 @@ export const addSchedule = (deviceId, schedule) => async dispatch => {
                 'Content-Type': 'application/json',
             },
         }
-        const data = await axios.post(`/api/devices/:${ deviceId}/schedules`, schedule, config)
+        const { data } = await axios.post(`/api/devices/${ deviceId }/schedules`, schedule, config)
         dispatch({ type: SCHEDULE_CREATE_SUCCESS, payload: data })
     } catch (error) {
         dispatch({ type: SCHEDULE_CREATE_FAIL, payload: error })
@@ -75,7 +75,7 @@ export const updateSchedule = (id, schedule) => async dispatch => {
                 'Content-Type': 'application/json',
             },
         }
-        const data = await axios.put(`/api/schedules/:${ id }`, schedule, config);
+        const { data } = await axios.put(`/api/schedules/${ id }`, schedule, config);
         dispatch({ type: SCHEDULE_UPDATE_SUCCESS, payload: data })
     } catch (error) {
         dispatch({ type: SCHEDULE_UPDATE_FAIL, payload: error })
@@ -87,7 +87,7 @@ export const deleteSchedule = id => async dispatch => {
     try {
         dispatch({ type: SCHEDULE_DELETE_REQUEST });
 
-        const data = await axios.delete(`/api/schedules/:${ id }`);
+        const { data } = await axios.delete(`/api/schedules/${ id }`);
         dispatch({ type: SCHEDULE_DELETE_SUCCESS, payload: data })
     } catch (error) {
         dispatch({ type: SCHEDULE_DELETE_FAIL, payload: error })

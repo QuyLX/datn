@@ -1,85 +1,134 @@
-import React, { useState, useEffect } from 'react'
-import { useHistory, useLocation } from 'react-router-dom'
+import React, { useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 import {
-    CBadge,
     CCard,
     CCardBody,
     CCardHeader,
     CCol,
     CDataTable,
     CRow,
-    CPagination
+    CButton
 } from '@coreui/react'
-
-import roomsData from './RoomData'
-
-const getBadge = status => {
-    switch (status) {
-        case 'Active': return 'success'
-        case 'Inactive': return 'secondary'
-        case 'Pending': return 'warning'
-        case 'Banned': return 'danger'
-        default: return 'primary'
-    }
-}
+import { useDispatch, useSelector } from 'react-redux';
+import { getRooms } from '../../../redux/actions/room';
+import Spinner from '../../../components/LoadingIndicator/Spinner';
+import Alert from '../../../components/Alert/Alerts';
+import Modal from '../../../components/Modal/Modal'
 
 const Rooms = () => {
     const history = useHistory()
-    const queryPage = useLocation().search.match(/page=([0-9]+)/, '')
-    const currentPage = Number(queryPage && queryPage[1] ? queryPage[1] : 1)
-    const [page, setPage] = useState(currentPage)
+    const dispatch = useDispatch();
+    const roomList = useSelector(state => state.roomList);
+    const { loading, error, data } = roomList
 
-    const pageChange = newPage => {
-        currentPage !== newPage && history.push(`/rooms?page=${ newPage }`)
-    }
-
+    const fields = [
+        { key: 'name', _style: { width: '20%' } },
+        { key: 'description', _style: { width: '24%' } },
+        { key: 'icon', _style: { width: '20%' } },
+        { key: 'createdAt', _style: { width: '24%' } },
+        {
+            key: 'detail',
+            label: '',
+            _style: { width: '1%' },
+            sorter: false,
+            filter: false
+        },
+        {
+            key: 'edit',
+            label: '',
+            _style: { width: '1%' },
+            sorter: false,
+            filter: false
+        },
+        {
+            key: 'delete',
+            label: '',
+            _style: { width: '1%' },
+            sorter: false,
+            filter: false
+        }
+    ]
     useEffect(() => {
-        currentPage !== page && setPage(currentPage)
-    }, [currentPage, page])
+        dispatch(getRooms());
+    }, [dispatch]);
 
     return (
-        <CRow>
-            <CCol xl={6}>
-                <CCard>
-                    <CCardHeader>
-                        Rooms
-                    </CCardHeader>
-                    <CCardBody>
-                        <CDataTable
-                            items={roomsData}
-                            fields={[
-                                { key: 'name', _classes: 'font-weight-bold' },
-                                'registered', 'role', 'status'
-                            ]}
-                            hover
-                            striped
-                            itemsPerPage={5}
-                            activePage={page}
-                            clickableRows
-                            onRowClick={(item) => history.push(`/rooms/${ item.id }`)}
-                            scopedSlots={{
-                                'status':
-                                    (item) => (
-                                        <td>
-                                            <CBadge color={getBadge(item.status)}>
-                                                {item.status}
-                                            </CBadge>
-                                        </td>
-                                    )
-                            }}
+        <>
+            {loading ? (
+                <Spinner />
+            ) : error ? (
+                <Alert color="danger" msg={error.message} />
+            ) : (
+                <CRow>
+                    <CCol sm={12} >
+                        <Modal
+                            type="Create mew room"
+                            title="Room info"
+                            body={`Create room`}
+                            size="lg"
+                            color="info"
                         />
-                        <CPagination
-                            activePage={page}
-                            onActivePageChange={pageChange}
-                            pages={5}
-                            doubleArrows={false}
-                            align="center"
-                        />
-                    </CCardBody>
-                </CCard>
-            </CCol>
-        </CRow>
+                    </CCol>
+                    <CCol sm={12}>
+                        <CCard>
+                            <CCardBody>
+                                <CDataTable
+                                    items={data.data}
+                                    fields={fields}
+                                    hover
+                                    striped
+                                    clickableRows
+                                    scopedSlots={{
+                                        'detail':
+                                            (item, index) => {
+                                                return (
+                                                    <td className="py-2">
+                                                        <CButton
+                                                            color="success"
+                                                            className="mr-1"
+                                                            onClick={() => history.push(`/rooms/${ item._id }`)}>
+                                                            Detail
+                                                    </CButton>
+                                                    </td>
+                                                )
+                                            },
+                                        'edit':
+                                            (item, index) => {
+                                                return (
+                                                    <td className="py-2">
+                                                        <Modal
+                                                            type="Update"
+                                                            title="Room update"
+                                                            body={`Update this room ${ item._id }`}
+                                                            size="lg"
+                                                            color="primary"
+                                                        />
+                                                    </td>
+                                                )
+                                            },
+                                        'delete':
+                                            (item, index) => {
+                                                return (
+                                                    <td className="py-2">
+                                                        <Modal
+                                                            type="Delete"
+                                                            title="Room delete"
+                                                            body={`Do you want delet this room ${ item._id }?`}
+                                                            size="sm"
+                                                            color="danger"
+                                                        />
+                                                    </td>
+                                                )
+                                            },
+                                    }}
+                                />
+                            </CCardBody>
+                        </CCard>
+                    </CCol>
+                </CRow>
+            )}
+        </>
     )
 }
 
-export default Rooms
+export default React.memo(Rooms)

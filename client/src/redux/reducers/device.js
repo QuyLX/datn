@@ -22,10 +22,10 @@ import {
     DEVICE_UPDATE_SUCCESS
 } from '../constants/deviceConstant';
 
-export const deviceList = (state = { data: [] }, action) => {
+export const deviceList = (state = { data: {} }, action) => {
     switch (action.type) {
         case DEVICE_LIST_REQUEST:
-            return { loading: true, data: [] }
+            return { loading: true, }
         case DEVICE_LIST_SUCCESS:
             return {
                 loading: false,
@@ -37,10 +37,10 @@ export const deviceList = (state = { data: [] }, action) => {
             return state
     }
 }
-export const deviceListInRoom = (state = { data: [] }, action) => {
+export const deviceListInRoom = (state = { data: {} }, action) => {
     switch (action.type) {
         case DEVICE_LIST_ROOM_REQUEST:
-            return { loading: true, data: [] }
+            return { loading: true, }
         case DEVICE_LIST_ROOM_SUCCESS:
             return {
                 loading: false,
@@ -53,14 +53,14 @@ export const deviceListInRoom = (state = { data: [] }, action) => {
     }
 }
 
-export const deviceDetail = (state = { device: {} }, action) => {
+export const deviceDetail = (state = {}, action) => {
     switch (action.type) {
         case DEVICE_DETAILS_REQUEST:
-            return { loading: true, data: {} }
+            return { loading: true, }
         case DEVICE_DETAILS_SUCCESS:
             return {
                 loading: false,
-                device: action.payload,
+                data: action.payload,
             }
         case DEVICE_DETAILS_FAIL:
             return { loading: false, error: action.payload }
@@ -85,14 +85,14 @@ export const createDevice = (state = {}, action) => {
     }
 }
 
-export const updateDevice = (state = { device: {} }, action) => {
+export const updateDevice = (state = {}, action) => {
     switch (action.type) {
         case DEVICE_UPDATE_REQUEST:
             return { loading: true }
         case DEVICE_UPDATE_SUCCESS:
             return {
                 loading: false,
-                device: action.payload,
+                data: action.payload,
             }
         case DEVICE_UPDATE_FAIL:
             return { loading: false, error: action.payload }
@@ -118,14 +118,14 @@ export const deleteDevice = (state = {}, action) => {
     }
 }
 
-export const controlDevice = (state = { device: {} }, action) => {
+export const controlDevice = (state = {}, action) => {
     switch (action.type) {
         case DEVICE_CONTROL_REQUEST:
             return { loading: true }
         case DEVICE_CONTROL_SUCCESS:
             return {
                 loading: false,
-                device: action.payload,
+                data: action.payload,
             }
         case DEVICE_CONTROL_FAIL:
             return { loading: false, error: action.payload }

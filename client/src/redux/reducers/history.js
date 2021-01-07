@@ -6,10 +6,10 @@ import {
     HISTORY_LIST_REQUEST,
     HISTORY_LIST_SUCCESS
 } from '../constants/historyConstant';
-export const historyList = (state = { data: [] }, action) => {
+export const historyList = (state = { data: {}}, action) => {
     switch (action.type) {
         case HISTORY_LIST_REQUEST:
-            return { loading: true, data: [] }
+            return { loading: true }
         case HISTORY_LIST_SUCCESS:
             return {
                 loading: false,
@@ -21,10 +21,10 @@ export const historyList = (state = { data: [] }, action) => {
             return state
     }
 }
-export const historyListPerDevice = (state = { data: [] }, action) => {
+export const historyListPerDevice = (state = { data: {}}, action) => {
     switch (action.type) {
         case HISTORY_LIST_DEVICE_REQUEST:
-            return { loading: true, data: [] }
+            return { loading: true }
         case HISTORY_LIST_DEVICE_SUCCESS:
             return {
                 loading: false,

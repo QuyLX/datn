@@ -26,7 +26,7 @@ import {
 export const getDevices = () => async dispatch => {
     try {
         dispatch({ type: DEVICE_LIST_REQUEST });
-        const data = await axios.get('/api/devices');
+        const { data } = await axios.get('/api/devices');
         dispatch({ type: DEVICE_LIST_SUCCESS, payload: data })
     } catch (error) {
         dispatch({ type: DEVICE_LIST_FAIL, payload: error })
@@ -36,7 +36,7 @@ export const getDevices = () => async dispatch => {
 export const getDevicesInRoom = roomId => async dispatch => {
     try {
         dispatch({ type: DEVICE_LIST_ROOM_REQUEST });
-        const data = await axios.get(`/api/rooms/:${ roomId }/devices`);
+        const { data } = await axios.get(`/api/rooms/${ roomId }/devices`);
         dispatch({ type: DEVICE_LIST_ROOM_SUCCESS, payload: data })
     } catch (error) {
         dispatch({ type: DEVICE_LIST_ROOM_FAIL, payload: error })
@@ -46,7 +46,7 @@ export const getDevicesInRoom = roomId => async dispatch => {
 export const getDevice = id => async dispatch => {
     try {
         dispatch({ type: DEVICE_DETAILS_REQUEST });
-        const data = await axios.get(`/api/devices/:${ id }`);
+        const { data } = await axios.get(`/api/devices/${ id }`);
         dispatch({ type: DEVICE_DETAILS_SUCCESS, payload: data })
     } catch (error) {
         dispatch({ type: DEVICE_DETAILS_FAIL, payload: error })
@@ -63,7 +63,7 @@ export const addDevice = (roomId, device) => async dispatch => {
                 'Content-Type': 'application/json',
             },
         }
-        const data = await axios.post(`api/rooms/:${ roomId }`, device, config)
+        const { data } = await axios.post(`api/rooms/${ roomId }`, device, config)
         dispatch({ type: DEVICE_CREATE_SUCCESS, payload: data })
     } catch (error) {
         dispatch({ type: DEVICE_CREATE_FAIL, payload: error })
@@ -78,7 +78,7 @@ export const updateDevice = (id, device) => async dispatch => {
                 'Content-Type': 'application/json',
             },
         }
-        const data = await axios.put(`/api/devices/:${ id }`, device, config);
+        const { data } = await axios.put(`/api/devices/${ id }`, device, config);
         dispatch({ type: DEVICE_UPDATE_SUCCESS, payload: data })
     } catch (error) {
         dispatch({ type: DEVICE_UPDATE_FAIL, payload: error })
@@ -91,14 +91,14 @@ export const deleteDevice = id => async dispatch => {
     try {
         dispatch({ type: DEVICE_DELETE_REQUEST });
 
-        const data = await axios.delete(`/api/devices/:${ id }`);
+        const { data } = await axios.delete(`/api/devices/${ id }`);
         dispatch({ type: DEVICE_DELETE_SUCCESS, payload: data })
     } catch (error) {
         dispatch({ type: DEVICE_DELETE_FAIL, payload: error })
     }
 }
 
-export const controlDevice = (state) => async dispatch => {
+export const controlDevice = (id, state) => async dispatch => {
     try {
         dispatch({ type: DEVICE_CONTROL_REQUEST });
         const config = {
@@ -106,7 +106,7 @@ export const controlDevice = (state) => async dispatch => {
                 'Content-Type': 'application/json',
             },
         }
-        const data = await axios.put(`/api/devices/:${ id }/control`, state, config);
+        const { data } = await axios.put(`/api/devices/${ id }/control`, state, config);
         dispatch({ type: DEVICE_CONTROL_SUCCESS, payload: data })
     } catch (error) {
         dispatch({ type: DEVICE_CONTROL_FAIL, payload: error })

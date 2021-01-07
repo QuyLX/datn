@@ -1,40 +1,93 @@
-import React from 'react'
-import { CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react'
-import CIcon from '@coreui/icons-react'
+import React, { useEffect } from 'react'
+import { CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react';
+import Spinner from '../../../components/LoadingIndicator/Spinner';
+import Alert from '../../../components/Alert/Alerts';
+import Modal from '../../../components/Modal/Modal'
+import CIcon from '@coreui/icons-react';
 
-import roomsData from './RoomData'
-
+import { useDispatch, useSelector } from 'react-redux';
+import { getDevicesInRoom, addDevice } from '../../../redux/actions/device'
 const Room = ({ match }) => {
-    const room = roomsData.find(room => room.id.toString() === match.params.id)
+    const { data } = useSelector(state => state.roomList.data);
+    const dispatch = useDispatch();
+    const deviceListInRoom = useSelector(state => state.deviceListInRoom);
+    const { loading, error } = deviceListInRoom;
+    console.log(deviceListInRoom);
+    const room = data.find(room => room._id.toString() === match.params.id)
     const roomDetails = room ? Object.entries(room) :
         [['id', (<span><CIcon className="text-muted" name="cui-icon-ban" /> Not found</span>)]]
-
+    useEffect(() => {
+        dispatch(getDevicesInRoom(match.params.id))
+    }, [dispatch, match.params.id]);
     return (
-        <CRow>
-            <CCol lg={6}>
-                <CCard>
-                    <CCardHeader>
-                        User id: {match.params.id}
-                    </CCardHeader>
-                    <CCardBody>
-                        <table className="table table-striped table-hover">
-                            <tbody>
-                                {
-                                    roomDetails.map(([key, value], index) => {
-                                        return (
-                                            <tr key={index.toString()}>
-                                                <td>{`${ key }:`}</td>
-                                                <td><strong>{value}</strong></td>
-                                            </tr>
-                                        )
-                                    })
-                                }
-                            </tbody>
-                        </table>
-                    </CCardBody>
-                </CCard>
-            </CCol>
-        </CRow>
+        <>
+            <CRow>
+                <CCol sm={12} >
+                    <Modal
+                        type="Add device in this room"
+                        title="Device info"
+                        body={`Add device`}
+                        size="lg"
+                        color="info"
+                    />
+                </CCol>
+                <CCol sm={12}>
+                    <CCard>
+                        <CCardHeader>
+                            Room id: {match.params.id}
+                        </CCardHeader>
+                        <CCardBody>
+                            <table className="table table-striped table-hover">
+                                <tbody>
+                                    {
+                                        roomDetails.map(([key, value], index) => {
+                                            return (
+                                                <tr key={index.toString()}>
+                                                    <td>{`${ key }:`}</td>
+                                                    <td><strong>{value}</strong></td>
+                                                </tr>
+                                            )
+                                        })
+                                    }
+                                </tbody>
+                            </table>
+                        </CCardBody>
+                    </CCard>
+                </CCol>
+            </CRow>
+
+            {loading ? (
+                <Spinner />
+            ) : error ? (
+                <Alert color="danger" msg={error.message} />
+            ) : (
+                        <CRow >
+                            <CCol>
+                                <span className="h1">List devices in this room</span>
+                            </CCol>
+                            <CCol sm={12}>
+                                <CCard>
+                                    <CCardBody>
+                                        <table className="table table-striped table-hover">
+                                            <tbody>
+                                                {
+                                                    // deviceListInRoom.data.map(([key, value], index) => {
+                                                    //     return (
+                                                    //         <tr key={index.toString()}>
+                                                    //             <td>{`${ key }:`}</td>
+                                                    //             <td><strong>{value}</strong></td>
+                                                    //         </tr>
+                                                    //     )
+                                                    // }) 
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </CCardBody>
+                                </CCard>
+                            </CCol>
+                        </CRow>
+                    )}
+        </>
     )
 }
 

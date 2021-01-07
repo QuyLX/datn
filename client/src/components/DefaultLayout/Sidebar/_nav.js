@@ -9,17 +9,10 @@ export default [
     icon: <CIcon name="cil-speedometer" customClasses="c-sidebar-nav-icon" />,
   },
   {
-    _tag: 'CSidebarNavDropdown',
+    _tag: 'CSidebarNavItem',
     name: 'Users',
-    icon: 'cil-people',
-    _children: [
-      {
-        _tag: 'CSidebarNavItem',
-        name: 'User Management',
-        to: '/users',
-        icon: 'cil-user'
-      }
-    ],
+    icon: <CIcon name="cil-people" customClasses="c-sidebar-nav-icon" />,
+    to: '/users',
   },
   {
     _tag: 'CSidebarNavItem',

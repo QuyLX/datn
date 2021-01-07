@@ -19,10 +19,10 @@ import {
     SCHEDULE_UPDATE_SUCCESS
 } from '../constants/scheduleConstant';
 
-export const scheduleList = (state = { data: [] }, action) => {
+export const scheduleList = (state = { data: {}}, action) => {
     switch (action.type) {
         case SCHEDULE_LIST_REQUEST:
-            return { loading: true, data: [] }
+            return { loading: true }
         case SCHEDULE_LIST_SUCCESS:
             return {
                 loading: false,
@@ -34,10 +34,10 @@ export const scheduleList = (state = { data: [] }, action) => {
             return state
     }
 }
-export const scheduleListOnDevice = (state = { data: [] }, action) => {
+export const scheduleListOnDevice = (state = { data: {}}, action) => {
     switch (action.type) {
         case SCHEDULE_LIST_DEVICE_REQUEST:
-            return { loading: true, data: [] }
+            return { loading: true }
         case SCHEDULE_LIST_DEVICE_SUCCESS:
             return {
                 loading: false,
@@ -50,10 +50,10 @@ export const scheduleListOnDevice = (state = { data: [] }, action) => {
     }
 }
 
-export const scheduleDetail = (state = { data: {} }, action) => {
+export const scheduleDetail = (state = {}, action) => {
     switch (action.type) {
         case SCHEDULE_DETAILS_REQUEST:
-            return { loading: true, data: {} }
+            return { loading: true }
         case SCHEDULE_DETAILS_SUCCESS:
             return {
                 loading: false,
@@ -82,14 +82,14 @@ export const createSchedule = (state = {}, action) => {
     }
 }
 
-export const updateSchedule = (state = { schedule: {} }, action) => {
+export const updateSchedule = (state = {}, action) => {
     switch (action.type) {
         case SCHEDULE_UPDATE_REQUEST:
             return { loading: true }
         case SCHEDULE_UPDATE_SUCCESS:
             return {
                 loading: false,
-                schedule: action.payload,
+                data: action.payload,
             }
         case SCHEDULE_UPDATE_FAIL:
             return { loading: false, error: action.payload }

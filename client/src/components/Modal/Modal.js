@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { CButton, CModal, CModalHeader, CModalBody, CModalFooter } from '@coreui/react'
-const Modal = () => {
+const Modal = ({type, title, body, size, color}) => {
     const [modal, setModal] = useState(false);
 
     const toggle = () => {
@@ -11,20 +11,21 @@ const Modal = () => {
             <CButton
                 onClick={toggle}
                 className="mr-1"
-                color="secondary"
+                color={color}
             >
-                Launch demo modal
+                {type}
             </CButton>
             <CModal
                 show={modal}
                 onClose={toggle}
+                size={size}
             >
-                <CModalHeader closeButton>Modal title</CModalHeader>
+                <CModalHeader closeButton>{title}</CModalHeader>
                 <CModalBody>
-                    Lorem ipsum dolor...
+                    {body}
                 </CModalBody>
                 <CModalFooter>
-                    <CButton color="primary">Do Something</CButton>{' '}
+                    <CButton color={color}>{type}</CButton>{' '}
                     <CButton
                         color="secondary"
                         onClick={toggle}

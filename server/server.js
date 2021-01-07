@@ -101,7 +101,7 @@ mqttClient.on('connect', async () => {
 
     try {
         // logic here
-
+        let subTopics = "a/b/c"
         /* Broker subscribes to messages from ESP8266 connected plants */
         mqttClient.subscribe(subTopics, { qos: mqttQoS }, (error) => {
             if (error) {

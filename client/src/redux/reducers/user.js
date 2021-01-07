@@ -25,10 +25,10 @@ import {
     USER_REMOVE_FAIL
 } from '../constants/userConstant';
 
-export const userList = (state = { data: [] }, action) => {
+export const userList = (state = { data: {}}, action) => {
     switch (action.type) {
         case USER_LIST_REQUEST:
-            return { loading: true, data: [] }
+            return { loading: true }
         case USER_LIST_SUCCESS:
             return {
                 loading: false,
@@ -40,10 +40,10 @@ export const userList = (state = { data: [] }, action) => {
             return state
     }
 }
-export const userListPerDevice = (state = { data: [] }, action) => {
+export const userListPerDevice = (state = { data: {}}, action) => {
     switch (action.type) {
         case USER_LIST_DEVICE_REQUEST:
-            return { loading: true, data: [] }
+            return { loading: true }
         case USER_LIST_DEVICE_SUCCESS:
             return {
                 loading: false,
@@ -56,10 +56,10 @@ export const userListPerDevice = (state = { data: [] }, action) => {
     }
 }
 
-export const userDetail = (state = { data: {} }, action) => {
+export const userDetail = (state = {}, action) => {
     switch (action.type) {
         case USER_DETAILS_REQUEST:
-            return { loading: true, data: {} }
+            return { loading: true, }
         case USER_DETAILS_SUCCESS:
             return {
                 loading: false,
@@ -103,14 +103,14 @@ export const addUserToUseDevice = (state = {}, action) => {
     }
 }
 
-export const updateUser = (state = { user: {} }, action) => {
+export const updateUser = (state = {}, action) => {
     switch (action.type) {
         case USER_UPDATE_REQUEST:
             return { loading: true }
         case USER_UPDATE_SUCCESS:
             return {
                 loading: false,
-                user: action.payload,
+                data: action.payload,
             }
         case USER_UPDATE_FAIL:
             return { loading: false, error: action.payload }

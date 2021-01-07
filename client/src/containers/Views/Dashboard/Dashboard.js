@@ -3,19 +3,21 @@ import ChartBarSimple from '../../../components/Charts/ChartBarSimple'
 import ChartLineSimple from '../../../components/Charts/ChartLineSimple'
 import {
     CCardGroup,
-    CCardFooter,
     CCol,
-    CLink,
     CRow,
-    CWidgetProgress,
-    CWidgetIcon,
     CWidgetProgressIcon,
     CWidgetSimple,
-    CProgress,
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
-
+import { useSelector } from 'react-redux';
+import Alert from '../../../components/Alert/Alerts';
 const Dashboard = () => {
+    const roomList = useSelector(state => state.roomList);
+    const userList = useSelector(state => state.userList);
+    const deviceList = useSelector(state => state.deviceList);
+    const { loading: loadRoom, error: errRoom, data: dataRoom } = roomList
+    const { loading: loadUser, error: errUser, data: dataUser } = userList
+    const { loading: loadDevice, error: errDevice, data: dataDevice } = deviceList
     return (
         <>
             <CRow >
@@ -62,30 +64,42 @@ const Dashboard = () => {
                 </CCol>
             </CRow>
             <CCardGroup className="mb-4">
-                <CWidgetProgressIcon
-                    header="87.500"
-                    text="Devices"
-                    color="gradient-info"
-                    inverse
-                >
-                    <CIcon name="cil-memory" height="36" />
-                </CWidgetProgressIcon>
-                <CWidgetProgressIcon
-                    header="385"
-                    text="Users"
-                    color="gradient-success"
-                    inverse
-                >
-                    <CIcon name="cil-people" height="36" />
-                </CWidgetProgressIcon>
-                <CWidgetProgressIcon
-                    header="1238"
-                    text="Rooms"
-                    color="gradient-warning"
-                    inverse
-                >
-                    <CIcon name="cil-home" height="36" />
-                </CWidgetProgressIcon>
+                {loadDevice ? "..." : errDevice ? (
+                    <Alert color="danger" msg={errDevice.message} />
+                ) : (
+                            <CWidgetProgressIcon
+                                header={dataDevice.count}
+                                text="Devices"
+                                color="gradient-info"
+                                inverse
+                            >
+                                <CIcon name="cil-memory" height="36" />
+                            </CWidgetProgressIcon>
+                        )}
+                {loadUser ? 
+                    "..."
+                 : errUser ? (
+                    <Alert color="danger" msg={errUser.message} />
+                ) : (
+                            <CWidgetProgressIcon
+                                header={dataUser.count}
+                                text="Users in system"
+                                color="gradient-success"
+                                inverse
+                            >
+                                <CIcon name="cil-people" height="36" />
+                            </CWidgetProgressIcon>)}
+                {loadRoom ? "..." : errRoom ? (
+                    <Alert color="danger" msg={errRoom.message} />
+                ) : (
+                            <CWidgetProgressIcon
+                                header={dataRoom.count}
+                                text="Rooms"
+                                color="gradient-warning"
+                                inverse
+                            >
+                                <CIcon name="cil-home" height="36" />
+                            </CWidgetProgressIcon>)}
             </CCardGroup>
             <CRow>
                 <CCol sm="4" lg="2">
@@ -119,8 +133,9 @@ const Dashboard = () => {
                     </CWidgetSimple>
                 </CCol>
             </CRow>
+
         </>
     )
 }
 
-export default Dashboard
+export default React.memo(Dashboard)

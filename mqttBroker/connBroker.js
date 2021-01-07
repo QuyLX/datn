@@ -1,4 +1,6 @@
 const mqtt = require("mqtt")
+const dotenv = require('dotenv');
+dotenv.config();
 
 const connectOptions = {
     clientId: 'webApplicationServer',

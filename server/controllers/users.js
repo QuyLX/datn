@@ -22,7 +22,7 @@ exports.getUsers = asyncHandler(async (req, res, next) => {
     } else {
         // only Admin and morderator can views all users
         if (req.user.role === "user") {
-            return next(new ErrorResponse(`User is not authorized for view all Users`))
+            return next(new ErrorResponse(`User is not authorized for view all Users`, 401))
         }
         res.status(200).json(res.advancedResults);
     }

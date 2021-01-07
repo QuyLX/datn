@@ -12,7 +12,9 @@ import {
     RESET_PASSWORD_REQUEST,
     RESET_PASSWORD_SUCCESS
 } from '../constants/userConstant';
-
+import { getRooms } from '../actions/room'
+import { getUsers } from '../actions/user'
+import { getDevices } from '../actions/device'
 // loaduser
 export const loaduser = () => async dispatch => {
     let token = localStorage.getItem("token");
@@ -24,6 +26,11 @@ export const loaduser = () => async dispatch => {
                 type: USER_LOADED,
                 payload: res.data
             })
+            await Promise.all([
+                dispatch(getRooms()),
+                dispatch(getUsers()),
+                dispatch(getDevices())
+            ])
         } catch (err) {
             dispatch({
                 type: AUTH_ERROR
@@ -103,7 +110,7 @@ export const resetPassword = (user, newPassword) => async dispatch => {
             },
         }
 
-        const { data } = await axios.put(`/api/auth/resetpassword/:${ user._id }`, newPassword, config);
+        const { data } = await axios.put(`/api/auth/resetpassword/${ user._id }`, newPassword, config);
         dispatch({ type: RESET_PASSWORD_SUCCESS, payload: data })
     } catch (error) {
         dispatch({ type: RESET_PASSWORD_FAIL, payload: error })

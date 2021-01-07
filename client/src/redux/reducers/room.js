@@ -16,10 +16,10 @@ import {
     ROOM_UPDATE_SUCCESS,
 } from '../constants/roomConstant';
 
-export const roomList = (state = { data: [] }, action) => {
+export const roomList = (state = { data: {}}, action) => {
     switch (action.type) {
         case ROOM_LIST_REQUEST:
-            return { loading: true, data: [] }
+            return { loading: true }
         case ROOM_LIST_SUCCESS:
             return {
                 loading: false,
@@ -32,10 +32,10 @@ export const roomList = (state = { data: [] }, action) => {
     }
 }
 
-export const roomDetail = (state = { data: {} }, action) => {
+export const roomDetail = (state = {}, action) => {
     switch (action.type) {
         case ROOM_DETAILS_REQUEST:
-            return { loading: true, data: {} }
+            return { loading: true }
         case ROOM_DETAILS_SUCCESS:
             return {
                 loading: false,
@@ -64,14 +64,14 @@ export const createRoom = (state = {}, action) => {
     }
 }
 
-export const updateRoom = (state = { room: {} }, action) => {
+export const updateRoom = (state = {}, action) => {
     switch (action.type) {
         case ROOM_UPDATE_REQUEST:
             return { loading: true }
         case ROOM_UPDATE_SUCCESS:
             return {
                 loading: false,
-                room: action.payload,
+                data: action.payload,
             }
         case ROOM_UPDATE_FAIL:
             return { loading: false, error: action.payload }
