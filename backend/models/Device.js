@@ -4,6 +4,7 @@ const DeviceSchema = new mongoose.Schema({
     name: {
         type: String,
         unique: true,
+        trim: true,
         required: [true, 'Please add a device name']
     },
     description: {

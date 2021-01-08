@@ -9,11 +9,11 @@ import {
   CButton
 } from '@coreui/react'
 import { useDispatch, useSelector } from 'react-redux';
-import { getUsers } from '../../../redux/actions/user';
+import { getUsers, deleteUser } from '../../../redux/actions/user';
 import Spinner from '../../../components/LoadingIndicator/Spinner';
 import Alert from '../../../components/Alert/Alerts';
 import Modal from '../../../components/Modal/Modal'
-
+import FormUser from '../../FormSubmit/FormUser'
 const Users = () => {
   const dispatch = useDispatch();
   const userList = useSelector(state => state.userList);
@@ -62,8 +62,8 @@ const Users = () => {
               <CCol sm={12} >
                 <Modal
                   type="Create new user"
-                  title="Room info"
-                  body={`Create room`}
+                  title="User info"
+                  body={<FormUser />}
                   size="lg"
                   color="info"
                 />
@@ -103,9 +103,15 @@ const Users = () => {
                                 <Modal
                                   type="Update"
                                   title="User update"
-                                  body={`Update this user ${ item._id }`}
+                                  body={<FormUser
+                                    id={item._id}
+                                    name={item.name}
+                                    email={item.email}
+                                    role={item.role}
+                                  />}
                                   size="lg"
                                   color="primary"
+
                                 />
                               </td>
                             )
@@ -117,10 +123,20 @@ const Users = () => {
                                 <Modal
                                   type="Delete"
                                   title="User delete"
-                                  body={`Do you want delete this user ${ item._id }?`}
+                                  body={<>
+                                    <b>{`Do you want delete ${ item.name }?`}</b>
+                                    <CButton
+                                      color="danger"
+                                      onClick={() => { dispatch(deleteUser(item._id)) }}
+                                      style={{ float: "right" }}
+                                    >
+                                      Delete
+                                    </CButton>
+                                  </>}
                                   size="sm"
                                   color="danger"
                                 />
+
                               </td>
                             )
                           },

@@ -4,15 +4,14 @@ import Spinner from '../../../components/LoadingIndicator/Spinner';
 import Alert from '../../../components/Alert/Alerts';
 import Modal from '../../../components/Modal/Modal'
 import CIcon from '@coreui/icons-react';
-
+import FormDevice from '../../FormSubmit/FormDevice'
 import { useDispatch, useSelector } from 'react-redux';
-import { getDevicesInRoom, addDevice } from '../../../redux/actions/device'
+import { getDevicesInRoom } from '../../../redux/actions/device'
 const Room = ({ match }) => {
     const { data } = useSelector(state => state.roomList.data);
     const dispatch = useDispatch();
     const deviceListInRoom = useSelector(state => state.deviceListInRoom);
     const { loading, error } = deviceListInRoom;
-    console.log(deviceListInRoom);
     const room = data.find(room => room._id.toString() === match.params.id)
     const roomDetails = room ? Object.entries(room) :
         [['id', (<span><CIcon className="text-muted" name="cui-icon-ban" /> Not found</span>)]]
@@ -26,7 +25,7 @@ const Room = ({ match }) => {
                     <Modal
                         type="Add device in this room"
                         title="Device info"
-                        body={`Add device`}
+                        body={<FormDevice roomId={match.params.id} />}
                         size="lg"
                         color="info"
                     />
@@ -63,7 +62,7 @@ const Room = ({ match }) => {
             ) : (
                         <CRow >
                             <CCol>
-                                <span className="h1">List devices in this room</span>
+                                <span className="h4">List devices in this room</span>
                             </CCol>
                             <CCol sm={12}>
                                 <CCard>

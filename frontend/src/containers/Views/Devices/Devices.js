@@ -8,14 +8,14 @@ import {
   CRow,
   CButton,
   CBadge,
-  CSwitch
+  CSwitch,
 } from '@coreui/react'
 import { useDispatch, useSelector } from 'react-redux';
-import { getDevices } from '../../../redux/actions/device';
+import { getDevices, deleteDevice } from '../../../redux/actions/device';
 import Spinner from '../../../components/LoadingIndicator/Spinner';
 import Alert from '../../../components/Alert/Alerts';
 import Modal from '../../../components/Modal/Modal'
-
+import FormDevice from '../../FormSubmit/FormDevice'
 const Devices = () => {
   const history = useHistory()
   const dispatch = useDispatch();
@@ -42,6 +42,7 @@ const Devices = () => {
       key: 'control',
       label: '',
       _style: { width: '1%' },
+      sorter: false,
       filter: false
     },
     {
@@ -136,7 +137,7 @@ const Devices = () => {
                                 <Modal
                                   type="Update"
                                   title="Device update"
-                                  body={`Update this schedule ${ item._id }`}
+                                  body={<FormDevice id={item._id} name={item.name} description={item.description} config={item.config} icon={item.icon} />}
                                   size="lg"
                                   color="primary"
                                 />
@@ -150,7 +151,16 @@ const Devices = () => {
                                 <Modal
                                   type="Delete"
                                   title="Device delete"
-                                  body={`Do you want delete this device ${ item._id }?`}
+                                  body={<>
+                                    <b>{`Do you want delete ${ item.name }?`}</b>
+                                    <CButton
+                                      color="danger"
+                                      onClick={() => { dispatch(deleteDevice(item._id)) }}
+                                      style={{ float: "right" }}
+                                    >
+                                      Delete
+                                    </CButton>
+                                  </>}
                                   size="sm"
                                   color="danger"
                                 />

@@ -115,7 +115,7 @@ const Dashboard = () => {
                             <CIcon name="cil-home" height="36" />
                         </CWidgetProgressIcon>)}
             </CCardGroup>
-            {loadRoom ? <Spinner /> : errRoom ? (
+            {loadRoom || loadRoom == undefined ? <Spinner /> : errRoom ? (
                 <Alert color="danger" msg={errRoom.message} />
             ) : (
                     <CRow>

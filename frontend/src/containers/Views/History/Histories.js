@@ -14,7 +14,6 @@ const Histories = () => {
     useEffect(() => {
         dispatch(getHistories())
     }, [dispatch]);
-    console.log(data);
     const fields = [
         { key: 'name', _style: { width: '40%' } },
         'registered',

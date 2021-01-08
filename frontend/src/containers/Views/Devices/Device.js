@@ -1,11 +1,10 @@
 import React from 'react'
 import { CCard, CCardBody, CCol, CRow, CDataTable, CCardHeader } from '@coreui/react';
-import { useDispatch, useSelector } from 'react-redux';
 import Spinner from '../../../components/LoadingIndicator/Spinner';
 import Alert from '../../../components/Alert/Alerts';
 import Modal from '../../../components/Modal/Modal'
 import CIcon from '@coreui/icons-react';
-
+import FormSchedule from '../../FormSubmit/FormSchedule'
 const Device = ({ match }) => {
   const data = []
   [['id', (<span><CIcon className="text-muted" name="cui-icon-ban" /> Not found</span>)]]
@@ -35,9 +34,9 @@ const Device = ({ match }) => {
                 <CCard>
                   <CCardHeader >
                     <Modal
-                      type="Add user to use this device"
-                      title="User info"
-                      body={`Add user`}
+                      type="Add schedule"
+                      title="Schedule info"
+                      body={<FormSchedule />}
                       size="lg"
                       color="info"
                     />
@@ -59,7 +58,7 @@ const Device = ({ match }) => {
                                 <Modal
                                   type="Delete"
                                   title="User delete"
-                                  body={`Do you want remove this user ${ item._id }?`}
+                                  body={<b>{`Do you want to remove  ${ item.name }?`}</b>}
                                   size="sm"
                                   color="warning"
                                 />

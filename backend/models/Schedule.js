@@ -17,12 +17,8 @@ const ScheduleSchema = new mongoose.Schema({
         type: Date,
         required: [true, 'Please add a start schedule']
     },
-    endDateAndTime: {
-        type: Date,
-        required: [true, 'Please add a end schedule']
-    },
-    startHour: Number,
-    duration: Number,
+    startHour: String,
+    duration: String,
     createdAt: {
         type: Date,
         default: Date.now

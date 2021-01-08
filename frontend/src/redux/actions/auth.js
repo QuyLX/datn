@@ -101,7 +101,7 @@ export const logout = () => async dispatch => {
 }
 
 // Reset password
-export const resetPassword = (user, newPassword) => async dispatch => {
+export const resetPassword = (id, newPassword) => async dispatch => {
     try {
         dispatch({ type: RESET_PASSWORD_REQUEST });
         const config = {
@@ -110,7 +110,7 @@ export const resetPassword = (user, newPassword) => async dispatch => {
             },
         }
 
-        const { data } = await axios.put(`/api/auth/resetpassword/${ user._id }`, newPassword, config);
+        const { data } = await axios.put(`/api/auth/resetpassword/${ id }`, newPassword, config);
         dispatch({ type: RESET_PASSWORD_SUCCESS, payload: data })
     } catch (error) {
         dispatch({ type: RESET_PASSWORD_FAIL, payload: error })

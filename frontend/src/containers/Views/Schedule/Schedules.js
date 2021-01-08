@@ -13,7 +13,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getSchedules } from '../../../redux/actions/schedule';
 import Spinner from '../../../components/LoadingIndicator/Spinner';
 import Alert from '../../../components/Alert/Alerts';
-import Modal from '../../../components/Modal/Modal'
+import Modal from '../../../components/Modal/Modal';
+import FormSchedule from '../../FormSubmit/FormSchedule'
+
 
 const Schedules = () => {
     const history = useHistory()
@@ -113,7 +115,14 @@ const Schedules = () => {
                                                                 <Modal
                                                                     type="Update"
                                                                     title="Schedule update"
-                                                                    body={`Update this schedule ${ item._id }`}
+                                                                    body={<FormSchedule
+                                                                        title={item.title}
+                                                                        description={item.description}
+                                                                        status={item.status}
+                                                                        dateAndTime={item.dateAndTime}
+                                                                        startHour={item.startHour}
+                                                                        duration={item.duration}
+                                                                    />}
                                                                     size="lg"
                                                                     color="primary"
                                                                 />
@@ -126,11 +135,12 @@ const Schedules = () => {
                                                             <td className="py-2">
                                                                 <Modal
                                                                     type="Delete"
-                                                                    title="Room delete"
-                                                                    body={`Do you want delete this schedule ${ item._id }?`}
+                                                                    title="Schedule delete"
+                                                                    body={<b>{`Do you want to cancel schedule ${ item.name }?`}</b>}
                                                                     size="sm"
                                                                     color="danger"
                                                                 />
+
                                                             </td>
                                                         )
                                                     },

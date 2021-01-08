@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { CButton, CModal, CModalHeader, CModalBody, CModalFooter } from '@coreui/react'
-const Modal = ({type, title, body, size, color}) => {
-    const [modal, setModal] = useState(false);
 
+const Modal = ({ type, title, body, size, color }) => {
+    const [modal, setModal] = useState(false);
     const toggle = () => {
         setModal(!modal);
     }
@@ -25,7 +25,6 @@ const Modal = ({type, title, body, size, color}) => {
                     {body}
                 </CModalBody>
                 <CModalFooter>
-                    <CButton color={color}>{type}</CButton>{' '}
                     <CButton
                         color="secondary"
                         onClick={toggle}

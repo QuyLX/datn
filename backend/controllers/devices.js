@@ -58,7 +58,6 @@ exports.addDevice = asyncHandler(async (req, res, next) => {
             404
         );
     }
-    /* Publish config data to ESP subscriber -> Retain in case ESP is offline (msg will be delivered next time ESP connects) */
     const device = await Device.create(req.body);
 
     res.status(200).json({

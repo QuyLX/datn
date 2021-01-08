@@ -2,7 +2,7 @@ import React from 'react'
 import { CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react'
 import CIcon from '@coreui/icons-react';
 import Modal from '../../../components/Modal/Modal'
-
+import ResetPassword from '../../FormSubmit/ResetPassword'
 
 import { useSelector } from 'react-redux';
 
@@ -19,7 +19,7 @@ const User = ({ match }) => {
           <Modal
             type="Reset Password"
             title="Reset passowrd"
-            body={`Reset password`}
+            body={<ResetPassword id={match.params.id}/>}
             size="sm"
             color="warning"
           />

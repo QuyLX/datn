@@ -63,7 +63,7 @@ export const addDevice = (roomId, device) => async dispatch => {
                 'Content-Type': 'application/json',
             },
         }
-        const { data } = await axios.post(`api/rooms/${ roomId }`, device, config)
+        const { data } = await axios.post(`/api/rooms/${ roomId }/devices`, device, config)
         dispatch({ type: DEVICE_CREATE_SUCCESS, payload: data })
     } catch (error) {
         dispatch({ type: DEVICE_CREATE_FAIL, payload: error })
