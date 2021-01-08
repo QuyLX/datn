@@ -5,10 +5,9 @@
   "main": "server.js",
   "scripts": {
     "start": "SET NODE_ENV=production & node server/server",
-    "server": "nodemon server/server",
-    "client": "npm start --prefix client",
+    "server": "nodemon backend/server",
+    "client": "npm start --prefix frontend",
     "broker": "nodemon broker/broker",
-    "mqtt": "nodemon server/mqtt/connectMqtt",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "data:import": "node server/seeder -i",
     "data:destroy": "node server/seeder -d",
@@ -17,8 +16,6 @@
   "author": "Quy",
   "license": "ISC",
   "dependencies": {
-    "aedes": "^0.44.1",
-    "async-mqtt": "^2.6.1",
     "bcryptjs": "^2.4.3",
     "cookie-parser": "^1.4.5",
     "cors": "^2.8.5",
@@ -29,12 +26,9 @@
     "helmet": "^4.2.0",
     "hpp": "^0.2.3",
     "jsonwebtoken": "^8.5.1",
-    "moment": "^2.29.1",
     "mongoose": "^5.11.8",
     "morgan": "^1.10.0",
     "mqtt": "^4.2.6",
-    "mqtt-packet": "^6.7.0",
-    "nodemailer": "^6.4.17",
     "xss-clean": "^0.1.1"
   },
   "devDependencies": {
