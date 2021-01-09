@@ -36,14 +36,14 @@ const User = ({ match }) => {
                 <tbody>
                   {
                     userDetails.map(([key, value], index) => {
-                      if (key != "devices") {
+                      if (key !== "devices") {
                         return (
                           <tr key={index.toString()}>
                             <td>{`${ key }:`}</td>
                             <td><strong>{value}</strong></td>
                           </tr>
-                        )
-                      }
+                        ) 
+                      } else return []
                     })
                   }
                 </tbody>

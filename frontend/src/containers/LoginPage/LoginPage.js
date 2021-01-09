@@ -18,8 +18,9 @@ import CIcon from '@coreui/icons-react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { login } from '../../redux/actions/auth'
+import Alert from "../../components/Alert/Alerts";
 
-const Login = ({ login, isAuthenticated }) => {
+const Login = ({ login, error, isAuthenticated }) => {
   const [form, setForm] = useState({
     email: "",
     password: ""
@@ -71,6 +72,11 @@ const Login = ({ login, isAuthenticated }) => {
                         onChange={e => onChange(e)}
                       />
                     </CInputGroup>
+                    {error &&
+                      <CCol xs="12">
+                        <Alert color="danger" msg={error.message} />
+                      </CCol>
+                    }
                     <CRow>
                       <CCol xs="6">
                         <CButton type="submit"
@@ -78,6 +84,7 @@ const Login = ({ login, isAuthenticated }) => {
                           Login
                           </CButton>
                       </CCol>
+                   
                     </CRow>
                   </CForm>
                 </CCardBody>
@@ -96,6 +103,7 @@ const Login = ({ login, isAuthenticated }) => {
             </CCardGroup>
           </CCol>
         </CRow>
+
       </CContainer>
     </div>
   ))
@@ -103,10 +111,13 @@ const Login = ({ login, isAuthenticated }) => {
 Login.propTypes = {
   login: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool,
+  error: PropTypes.object,
 }
 
 const mapStateToProps = state => ({
-  isAuthenticated: state.auth.isAuthenticated
+  isAuthenticated: state.auth.isAuthenticated,
+  error: state.auth.error
+
 })
 
 export default connect(mapStateToProps, { login })(Login)

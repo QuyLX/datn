@@ -1,16 +1,23 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { CCard, CCardBody, CCol, CRow, CDataTable, CCardHeader } from '@coreui/react';
 import Spinner from '../../../components/LoadingIndicator/Spinner';
 import Alert from '../../../components/Alert/Alerts';
 import Modal from '../../../components/Modal/Modal'
-import CIcon from '@coreui/icons-react';
-import FormSchedule from '../../FormSubmit/FormSchedule'
+import FormSchedule from '../../FormSubmit/FormSchedule';
+import { getUsersInused } from '../../../redux/actions/user'
+import { getSchedulesPerDevice } from '../../../redux/actions/schedule'
+import { getHistoriesPerDevice } from '../../../redux/actions/history'
+import { useSelector, useDispatch } from "react-redux"
 const Device = ({ match }) => {
-  const data = []
-  [['id', (<span><CIcon className="text-muted" name="cui-icon-ban" /> Not found</span>)]]
+  const dispatch = useDispatch();
+  const scheduleListOnDevice = useSelector(state => state.scheduleListOnDevice);
+  const historyListPerDevice = useSelector(state => state.historyListPerDevice);
+  const userListPerDevice = useSelector(state => state.userListPerDevice);
+  const { loading: loadSchedule, data: dataSchedule, error: errSchedule } = scheduleListOnDevice;
+  const { loading: loadHistory, data: dataHistory, error: errHistory } = historyListPerDevice
+  const { loading: loadUsers, data: dataUsers, error: errUsers } = userListPerDevice
   const fields = [
     { key: 'name', _style: { width: '20%' } },
-    { key: 'role', _style: { width: '20%' } },
     { key: 'createdAt', _style: { width: '24%' } },
     {
       key: 'remove',
@@ -20,144 +27,130 @@ const Device = ({ match }) => {
       filter: false
     }
   ]
+
+  useEffect(() => {
+    dispatch(getUsersInused(match.params.id));
+    dispatch(getSchedulesPerDevice(match.params.id));
+    dispatch(getHistoriesPerDevice(match.params.id));
+  }, [dispatch, match.params.id]);
   return (
     <>
       <CRow>
-        {/* list user in use Device */}
         <CCol sm={12} md={6}>
           <>
-            <CRow>
-              <CCol sm={12} >
-                <span className="h4">List schedule in device</span>
-              </CCol>
-              <CCol sm={12}>
-                <CCard>
-                  <CCardHeader >
-                    <Modal
-                      type="Add schedule"
-                      title="Schedule info"
-                      body={<FormSchedule />}
-                      size="lg"
-                      color="info"
-                    />
-                  </CCardHeader>
-                  <CCardBody>
-                    <CDataTable
-                      items={data}
-                      fields={fields}
-                      columnFilter
-                      footer
-                      hover
-                      sorter
-                      pagination
-                      scopedSlots={{
-                        'remove':
-                          (item, index) => {
-                            return (
-                              <td className="py-2">
-                                <Modal
-                                  type="Delete"
-                                  title="User delete"
-                                  body={<b>{`Do you want to remove  ${ item.name }?`}</b>}
-                                  size="sm"
-                                  color="warning"
-                                />
-                              </td>
-                            )
-                          },
-                      }}
-                    />
-                  </CCardBody>
-                </CCard>
-              </CCol>
-            </CRow>
+            {loadSchedule ? (
+              <Spinner />
+            ) : errSchedule ? (
+              <Alert color="danger" msg={errSchedule.message} />
+            ) : (
+                  <CRow>
+                    <CCol sm={12} >
+                      <span className="h4">List schedule in device</span>
+                    </CCol>
+                    <CCol sm={12}>
+                      <CCard>
+                        <CCardHeader >
+                          <Modal
+                            type="Add schedule"
+                            title="Schedule info"
+                            body={<FormSchedule />}
+                            size="lg"
+                            color="info"
+                          />
+                        </CCardHeader>
+                        <CCardBody>
+                          <CDataTable
+                            items={dataSchedule.data}
+                            fields={fields}
+                            columnFilter
+                            tableFilter
+                            footer
+                            itemsPerPageSelect
+                            itemsPerPage={5}
+                            hover
+                            sorter
+                            pagination
+                          />
+                        </CCardBody>
+                      </CCard>
+                    </CCol>
+                  </CRow>
+                )}
           </>
         </CCol>
 
-        {/* list schedule in Device */}
+        {/* list user in Device */}
 
         <CCol sm={12} md={6}>
           <>
-
-            <CRow>
-              <CCol sm={12} >
-                <span className="h4">List user in used device</span>
-              </CCol>
-              <CCol sm={12}>
-                <CCard>
-                  <CCardHeader >
-                    <Modal
-                      type="Add user to use this device"
-                      title="User info"
-                      body={`Add user`}
-                      size="lg"
-                      color="info"
-                    />
-                  </CCardHeader>
-                  <CCardBody>
-                    <CDataTable
-                      items={data}
-                      fields={fields}
-                      columnFilter
-                      footer
-                      hover
-                      sorter
-                      pagination
-                      scopedSlots={{
-                        'remove':
-                          (item, index) => {
-                            return (
-                              <td className="py-2">
-                                <Modal
-                                  type="Delete"
-                                  title="User delete"
-                                  body={`Do you want remove this user ${ item._id }?`}
-                                  size="sm"
-                                  color="warning"
-                                />
-                              </td>
-                            )
-                          },
-                      }}
-                    />
-                  </CCardBody>
-                </CCard>
-              </CCol>
-            </CRow>
+            {loadUsers ? (
+              <Spinner />
+            ) : errUsers ? (
+              <Alert color="danger" msg={errUsers.message} />
+            ) : (
+                  <CRow>
+                    <CCol sm={12} >
+                      <span className="h4">List user in used device</span>
+                    </CCol>
+                    <CCol sm={12}>
+                      <CCard>
+                        <CCardHeader >
+                          <Modal
+                            type="Add user to use this device"
+                            title="User info"
+                            body={`Add user`}
+                            size="lg"
+                            color="info"
+                          />
+                        </CCardHeader>
+                        <CCardBody>
+                          <CDataTable
+                            items={dataUsers.users}
+                            fields={fields}
+                            columnFilter
+                            tableFilter
+                            footer
+                            itemsPerPageSelect
+                            itemsPerPage={5}
+                            hover
+                            sorter
+                            pagination
+                           
+                          />
+                        </CCardBody>
+                      </CCard>
+                    </CCol>
+                  </CRow>)}
           </>
 
         </CCol>
       </CRow>
       {/* History of device */}
+      {loadHistory ? (
+        <Spinner />
+      ) : errHistory ? (
+          <Alert color="danger" msg={errHistory.message} />
+      ) : (
       <CRow>
         <CCol sm={12} >
           <span className="h4">History of device</span>
         </CCol>
         <CCol sm={12}>
           <CDataTable
-            items={data}
-            fields={fields}
-            columnFilter
-            tableFilter
-            footer
-            itemsPerPageSelect
-            itemsPerPage={5}
-            hover
-            sorter
-            pagination
-            scopedSlots={{
-              'status':
-                (item) => (
-                  <td>
-                    {/* <CBadge color={getBadge(item.status)}>
-                      {item.status}
-                    </CBadge> */}
-                  </td>
-                )
-            }}
+                  items={dataHistory.data}
+                  fields={fields}
+                  columnFilter
+                  tableFilter
+                  footer
+                  itemsPerPageSelect
+                  itemsPerPage={5}
+                  hover
+                  sorter
+                  pagination
           />
         </CCol>
-      </CRow>
+            </CRow>
+          )}
     </>
   )
 }

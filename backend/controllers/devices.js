@@ -2,6 +2,7 @@ const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middlewares/async');
 const Device = require('../models/Device');
 const Room = require('../models/Room');
+const mqttHandler = require('../../mqtt_broker/connBroker')
 
 // @desc      Get all devices, get all devices for specific room
 // @route     GET /api/devices
@@ -50,6 +51,8 @@ exports.getDevice = asyncHandler(async (req, res, next) => {
 // @route     POST /api/rooms/:roomId/devices
 // @access    Private
 exports.addDevice = asyncHandler(async (req, res, next) => {
+    const mqttClient = new mqttHandler();
+
     req.body.room = req.params.roomId;
     const room = await Room.findById(req.params.roomId);
     if (!room) {
@@ -58,6 +61,10 @@ exports.addDevice = asyncHandler(async (req, res, next) => {
             404
         );
     }
+
+    mqttClient.connect(`addDevice`, `${ req.params.roomId }/${ req.body.name }`);
+    mqttClient.sendMessage(`${ req.body.config }`, `${ req.params.roomId }/${ req.body.name }`);
+
     const device = await Device.create(req.body);
 
     res.status(200).json({
@@ -71,6 +78,7 @@ exports.addDevice = asyncHandler(async (req, res, next) => {
 // @access    Private
 exports.updateDevice = asyncHandler(async (req, res, next) => {
     let device = await Device.findById(req.params.id);
+    const mqttClient = new mqttHandler();
 
     if (!device) {
         return next(
@@ -88,6 +96,14 @@ exports.updateDevice = asyncHandler(async (req, res, next) => {
             401
         );
     }
+    if (req.body.name) {
+        mqttClient.connect(`updateDevice`, `${ device.room }/${ req.body.name }`);
+        mqttClient.sendMessage(`${ req.body.config }`, `${ device.room }/${ req.body.name }`);
+    } else {
+        mqttClient.connect(`updateDevice`, `${ device.room }/${ device.name }`);
+        mqttClient.sendMessage(`${ req.body.config }`, `${ device.room }/${ req.body.name }`);
+    }
+
     device = await Device.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
         runValidators: true
@@ -123,6 +139,8 @@ exports.deleteDevice = asyncHandler(async (req, res, next) => {
 //  @route  PUT /api/devices/:id/control
 //  @access Private
 exports.controlDevice = asyncHandler(async (req, res, next) => {
+    const mqttClient = new mqttHandler();
+
     let device = await Device.findById(req.params.id).select("+state");
 
     if (!device) {
@@ -142,12 +160,13 @@ exports.controlDevice = asyncHandler(async (req, res, next) => {
         );
     }
     const { state } = req.body
-
+    mqttClient.connect(`controlDevice`, `${ device.room }/${ device.name }`);
+    mqttClient.sendMessage(`${ state }`, `${ device.room }/${ device.name }`);
     device = await Device.findByIdAndUpdate(req.params.id, { state }, {
         new: true,
         runValidators: true
     });
-   
+
     res.status(200).json({
         success: true,
         data: device

@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
 
 const HistorySchema = new mongoose.Schema({
-    data: [String],
+    data: {
+        type: String
+    },
     device: {
         type: String
     },

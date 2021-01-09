@@ -12,20 +12,21 @@ import {
   CInputGroupText,
   CRow
 } from '@coreui/react'
-import CIcon from '@coreui/icons-react'
-import { connect } from 'react-redux'
+import CIcon from '@coreui/icons-react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import {Redirect} from 'react-router-dom'
-import { register } from '../../redux/actions/auth'
+import { Redirect } from 'react-router-dom';
+import { register } from '../../redux/actions/auth';
+import Alert from "../../components/Alert/Alerts";
 
-const RegisterPage = ({isAuthenticated, register }) => {
+const RegisterPage = ({ isAuthenticated, error, register }) => {
   const [form, setForm] = useState({
     name: "",
     email: "",
     password: "",
     password2: ""
   })
-  const { name, email,password, password2 } = form
+  const { name, email, password, password2 } = form
 
   const onChange = e => {
     setForm({ ...form, [e.target.name]: e.target.value })
@@ -35,7 +36,7 @@ const RegisterPage = ({isAuthenticated, register }) => {
     if (password !== password2) {
       alert("Please confirm true Password")
     } else {
-      register({ name, email, password })
+      register({ name, email, password });
     }
   }
 
@@ -106,7 +107,15 @@ const RegisterPage = ({isAuthenticated, register }) => {
                         onChange={e => onChange(e)}
                       />
                     </CInputGroup>
-                    <CButton className="mb-4" type="submit" color="success" block>
+                    <CCol md="9" lg="7" xl="6">
+                      {error && <Alert color="danger" msg={error.message} />}
+                    </CCol>
+                    <CButton
+                      className="mb-4"
+                      type="submit"
+                      color="success"
+                      block
+                    >
                       Create Account
                       </CButton>
                   </CForm>
@@ -123,10 +132,12 @@ const RegisterPage = ({isAuthenticated, register }) => {
 RegisterPage.propTypes = {
   register: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool,
+  error: PropTypes.object,
 }
 
 const mapStateToProps = state => ({
-  isAuthenticated: state.auth.isAuthenticated
+  isAuthenticated: state.auth.isAuthenticated,
+  error: state.auth.error
 })
 
 export default connect(mapStateToProps, { register })(RegisterPage) 

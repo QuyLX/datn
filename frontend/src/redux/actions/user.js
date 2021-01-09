@@ -39,7 +39,7 @@ export const getUsers = () => async dispatch => {
 export const getUsersInused = deviceId => async dispatch => {
     try {
         dispatch({ type: USER_LIST_DEVICE_REQUEST });
-        const { data } = await axios.get(`/api/devices/${ deviceId }/users`);
+        const { data } = await axios.get(`/api/devices/${ deviceId}/users`);
         dispatch({ type: USER_LIST_DEVICE_SUCCESS, payload: data })
     } catch (error) {
         dispatch({ type: USER_LIST_DEVICE_FAIL, payload: error })

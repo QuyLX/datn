@@ -78,7 +78,7 @@ const Dashboard = () => {
                 </>}
             </CRow>
             <CCardGroup className="mb-4">
-                {loadDevice ? "..." : errDevice ? (
+                {loadDevice ? " " : errDevice ? (
                     <Alert color="danger" msg={errDevice.message} />
                 ) : (
                         <CWidgetProgressIcon
@@ -91,7 +91,7 @@ const Dashboard = () => {
                         </CWidgetProgressIcon>
                     )}
                 {loadUser ?
-                    "..."
+                    ""
                     : errUser ? (
                         <Alert color="danger" msg={errUser.message} />
                     ) : (
@@ -103,7 +103,7 @@ const Dashboard = () => {
                             >
                                 <CIcon name="cil-people" height="36" />
                             </CWidgetProgressIcon>)}
-                {loadRoom ? "..." : errRoom ? (
+                {loadRoom ? <Spinner /> : errRoom ? (
                     <Alert color="danger" msg={errRoom.message} />
                 ) : (
                         <CWidgetProgressIcon
@@ -115,7 +115,7 @@ const Dashboard = () => {
                             <CIcon name="cil-home" height="36" />
                         </CWidgetProgressIcon>)}
             </CCardGroup>
-            {loadRoom || loadRoom == undefined ? <Spinner /> : errRoom ? (
+            {loadRoom || loadRoom === undefined ? <Spinner /> : errRoom ? (
                 <Alert color="danger" msg={errRoom.message} />
             ) : (
                     <CRow>
