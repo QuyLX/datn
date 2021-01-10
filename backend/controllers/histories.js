@@ -15,10 +15,8 @@ exports.getHistories = asyncHandler(async (req, res, next) => {
         }
         // Check user is in used?
         const arrUser = users.users.filter(item => 
-
             req.user.id == item._id 
         )
-        console.log(arrUser);
         if (arrUser.length === 0 && req.user.role === "user") {
             return next(new ErrorResponse(`User with id ${ req.user.id } is not authorized`, 401))
         }

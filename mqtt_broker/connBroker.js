@@ -1,17 +1,9 @@
 const mqtt = require('mqtt');
 
-connectOptions = {
-    username: 'admin123',
-    password: '123456',
-    keepalive: 120,
-    reconnectPeriod: 5000
-}
-
 class MqttHandler {
     constructor() {
         this.mqttClient = null;
-        this.err = null;
-        this.checkConnect = null;
+        this.host = 'mqtt://localhost';
         this.connectOptions = {
             username: 'admin123',
             password: '123456',
@@ -19,7 +11,7 @@ class MqttHandler {
             reconnectPeriod: 5000
         }
     }
-    connect(client, subTopic) {
+    connect(client) {
         // Connect mqtt with credentials (in case of needed, otherwise we can omit 2nd param)
         this.mqttClient = mqtt.connect(this.host, { clientId: client, ...this.connectOptions });
 
@@ -32,14 +24,13 @@ class MqttHandler {
         // Connection callback
         this.mqttClient.on('connect', () => {
             console.log(`mqtt client connected`);
+            this.mqttClient.end()
         });
 
-        // mqtt subscriptions
-        this.mqttClient.subscribe(subTopic, { qos: 0 });
 
         // When a message arrives, console.log it
         this.mqttClient.on('message', function (topic, message) {
-            console.log(topic);
+            console.log(`${topic}`);
             console.log(message.toString());
         });
 
@@ -49,9 +40,14 @@ class MqttHandler {
     }
 
     // Sends a mqtt message to topic: mytopic
-    sendMessage(pubTopic, message) {
-        this.mqttClient.publish(pubTopic, message, { qos: 1, retain: true });
+    sendMessage(topic, message) {
+        this.mqttClient.publish(topic, message, { qos: 1, retain: true });
     }
+    // Receive message
+    receiveMessage(topic) {
+        this.mqttClient.subscribe(topic, { qos: 1 });
+    }
+
 }
 
 module.exports = MqttHandler;

@@ -1,3 +1,21 @@
+const mongoose = require('mongoose');
+const dotenv = require('dotenv');
+const connectDB = require('../backend/config/db')
+// Load env vars
+dotenv.config();
+// Connect to Database
+connectDB();
+// Load models
+const History = require('../backend/models/History');
+
+// Connect to DB
+mongoose.connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useCreateIndex: true,
+    useFindAndModify: false,
+    useUnifiedTopology: true
+});
+
 const aedesOptions = { concurrency: 200, connectTimeout: 5000 }
 const aedes = require('aedes')(aedesOptions)
 const server = require('net').createServer(aedes.handle)
@@ -26,8 +44,8 @@ aedes.authenticate = (client, username, password, callback) => {
  ******************************************************/
 
 /* Fire when broker connected */
-aedes.on('clientReady', (client) => {
-    console.log(`Client ${ client.id } has connected!`)
+aedes.on('clientReady', async (client) => {
+    console.log(`Client ${ client.id } has connected!`);
 })
 
 /* Publish message reaches to the broker */
@@ -36,6 +54,7 @@ aedes.on('publish', async (publish, client) => {
     if (!client) {
         return
     }
+    await History.create(JSON.parse(publish.payload.toString()))
     console.log(`Published message ${ publish.messageId } of topic ${ publish.topic } from ${ client.id }`)
 })
 
@@ -65,6 +84,6 @@ aedes.on('ack', async (packet, client) => {
 })
 
 /* On client disconnect */
-aedes.on('clientDisconnect', (client) => {
+aedes.on('clientDisconnect', async (client) => {
     console.log(`Client ${ client.id } has disconnected`)
 })

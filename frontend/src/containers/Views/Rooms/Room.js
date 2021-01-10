@@ -1,20 +1,69 @@
 import React, { useEffect } from 'react'
-import { CCard, CCardBody, CCardHeader, CCol, CRow } from '@coreui/react';
+import {
+    CCard,
+    CCardBody,
+    CCardHeader,
+    CCol,
+    CRow,
+    CDataTable,
+    CButton,
+    CBadge,
+    CSwitch, } from '@coreui/react';
 import Spinner from '../../../components/LoadingIndicator/Spinner';
 import Alert from '../../../components/Alert/Alerts';
-import Modal from '../../../components/Modal/Modal'
-import CIcon from '@coreui/icons-react';
+import Modal from '../../../components/Modal/Modal';
 import FormDevice from '../../FormSubmit/FormDevice'
 import { useDispatch, useSelector } from 'react-redux';
-import { getDevicesInRoom } from '../../../redux/actions/device'
+import { getDevicesInRoom, deleteDevice } from '../../../redux/actions/device'
 const Room = ({ match }) => {
-    const { data } = useSelector(state => state.roomList.data);
     const dispatch = useDispatch();
     const deviceListInRoom = useSelector(state => state.deviceListInRoom);
-    const { loading, error } = deviceListInRoom;
-    const room = data.find(room => room._id.toString() === match.params.id)
-    const roomDetails = room ? Object.entries(room) :
-        [['id', (<span><CIcon className="text-muted" name="cui-icon-ban" /> Not found</span>)]]
+    const { data: dataList ,loading, error } = deviceListInRoom;
+    const fields = [
+        { key: 'name', _style: { width: '20%' } },
+        {
+            key: 'description', _style: { width: '10%' }, sorter: false,
+            filter: false
+        },
+        {
+            key: 'config', _style: { width: '10%' }, sorter: false,
+            filter: false
+        },
+        {
+            key: 'icon', _style: { width: '10%' }, sorter: false,
+            filter: false
+        },
+        { key: 'state', _style: { width: '10%' } },
+        { key: 'createdAt', _style: { width: '10%' } },
+        {
+            key: 'control',
+            label: '',
+            _style: { width: '1%' },
+            sorter: false,
+            filter: false
+        },
+        {
+            key: 'edit',
+            label: '',
+            _style: { width: '1%' },
+            sorter: false,
+            filter: false
+        },
+        {
+            key: 'delete',
+            label: '',
+            _style: { width: '1%' },
+            sorter: false,
+            filter: false
+        }
+    ]
+    const getBadge = (status) => {
+        switch (status) {
+            case 'on': return 'success'
+            case 'off': return 'danger'
+            default: return 'primary'
+        }
+    }
     useEffect(() => {
         dispatch(getDevicesInRoom(match.params.id))
     }, [dispatch, match.params.id]);
@@ -33,59 +82,87 @@ const Room = ({ match }) => {
                 <CCol sm={12}>
                     <CCard>
                         <CCardHeader>
-                            Room id: {match.params.id}
+                            <span className="h4">List devices in this room</span>
+
                         </CCardHeader>
                         <CCardBody>
-                            <table className="table table-striped table-hover">
-                                <tbody>
-                                    {
-                                        roomDetails.map(([key, value], index) => {
-                                            return (
-                                                <tr key={index.toString()}>
-                                                    <td>{`${ key }:`}</td>
-                                                    <td><strong>{value}</strong></td>
-                                                </tr>
-                                            )
-                                        })
-                                    }
-                                </tbody>
-                            </table>
+                            {loading ? (
+                                <Spinner />
+                            ) : error ? (
+                                <Alert color="danger" msg={error.message} />
+                            ) : (
+                                        <CDataTable
+                                            items={dataList.data}
+                                            fields={fields}
+                                            columnFilter
+                                            tableFilter
+                                            footer
+                                            itemsPerPageSelect
+                                            itemsPerPage={5}
+                                            hover
+                                            sorter
+                                            pagination
+                                            scopedSlots={{
+                                                'status':
+                                                    (item) => (
+                                                        <td>
+                                                            <CBadge color={getBadge(item.status)}>
+                                                                {item.status}
+                                                            </CBadge>
+                                                        </td>
+                                                    ),
+                                                'control':
+                                                    (item, index) => {
+                                                        return (
+                                                            <td className="py-2">
+                                                                <CSwitch className={'mx-1 mr-1'} variant={'3d'} color={'dark'} defaultChecked onChange={(e) => console.log(e.target.checked)} />
+                                                            </td>
+                                                        )
+                                                    },
+                            
+                                                'edit':
+                                                    (item, index) => {
+                                                        return (
+                                                            <td className="py-2">
+                                                                <Modal
+                                                                    type="Update"
+                                                                    title="Device update"
+                                                                    body={<FormDevice id={item._id} name={item.name} description={item.description} config={item.config} icon={item.icon} />}
+                                                                    size="lg"
+                                                                    color="primary"
+                                                                />
+                                                            </td>
+                                                        )
+                                                    },
+                                                'delete':
+                                                    (item, index) => {
+                                                        return (
+                                                            <td className="py-2">
+                                                                <Modal
+                                                                    type="Delete"
+                                                                    title="Device delete"
+                                                                    body={<>
+                                                                        <b>{`Do you want delete ${ item.name }?`}</b>
+                                                                        <CButton
+                                                                            color="danger"
+                                                                            onClick={() => { dispatch(deleteDevice(item._id)) }}
+                                                                            style={{ float: "right" }}
+                                                                        >
+                                                                            Delete
+                                                                        </CButton>
+                                                                    </>}
+                                                                    size="sm"
+                                                                    color="danger"
+                                                                />
+                                                            </td>
+                                                        )
+                                                    },
+                                            }}
+                                        />)}
                         </CCardBody>
                     </CCard>
                 </CCol>
             </CRow>
-
-            {loading ? (
-                <Spinner />
-            ) : error ? (
-                <Alert color="danger" msg={error.message} />
-            ) : (
-                        <CRow >
-                            <CCol>
-                                <span className="h4">List devices in this room</span>
-                            </CCol>
-                            <CCol sm={12}>
-                                <CCard>
-                                    <CCardBody>
-                                        <table className="table table-striped table-hover">
-                                            <tbody>
-                                                {
-                                                    // deviceListInRoom.data.map(([key, value], index) => {
-                                                    //     return (
-                                                    //         <tr key={index.toString()}>
-                                                    //             <td>{`${ key }:`}</td>
-                                                    //             <td><strong>{value}</strong></td>
-                                                    //         </tr>
-                                                    //     )
-                                                    // }) 
-                                                }
-                                            </tbody>
-                                        </table>
-                                    </CCardBody>
-                                </CCard>
-                            </CCol>
-                        </CRow>
-                    )}
         </>
     )
 }

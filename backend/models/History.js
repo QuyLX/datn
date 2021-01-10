@@ -1,11 +1,16 @@
 const mongoose = require('mongoose');
 
 const HistorySchema = new mongoose.Schema({
-    data: {
-        type: String
+    data: String,
+    createdAt: {
+        type: Date,
+        default :Date.now()
     },
+    state: Boolean,
     device: {
-        type: String
+        type: mongoose.Schema.ObjectId,
+        ref: 'Device',
+        required: true
     },
     user: {
         type: String

@@ -9,19 +9,21 @@ const ScheduleSchema = new mongoose.Schema({
         type: String,
         required: [true, 'Please add a description for schedule']
     },
-    status: {
-        type: String,
-        required: [true, 'Please add a status for control device']
+    state: {
+        type: Boolean,
+        required: [true, 'Please add a state for control device']
     },
-    dateAndTime: {
+    timeStart: {
         type: Date,
         required: [true, 'Please add a start schedule']
     },
-    startHour: String,
-    duration: String,
+    timeEnd: {
+        type: Date,
+        required: [true, 'Please add a end schedule']
+    },
     createdAt: {
         type: Date,
-        default: Date.now
+        default: Date.now()
     },
     device: {
         type: mongoose.Schema.ObjectId,
@@ -35,6 +37,7 @@ const ScheduleSchema = new mongoose.Schema({
     }
 });
 
-
+// Prevent user from submitting more than one schedule 
+ScheduleSchema.index({ device: 1, user: 1 }, { unique: true });
 
 module.exports = mongoose.model('Schedule', ScheduleSchema);

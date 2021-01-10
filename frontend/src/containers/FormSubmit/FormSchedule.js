@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
     CCol,
     CForm,
@@ -6,16 +6,37 @@ import {
     CTextarea,
     CInput,
     CLabel,
-} from '@coreui/react'
-const FormSchedule = ({ title, description, status, dateAndTime, startHour, duration }) => {
+    CInputCheckbox,
+    CButton
+} from '@coreui/react';
+import { useDispatch } from 'react-redux';
+import { updateSchedule } from '../../redux/actions/schedule'
+const FormSchedule = ({ title, description, state, timeStart, timeEnd, id }) => {
+    const distpatch = useDispatch();
+    const [form, setForm] = useState({
+        title: title || "",
+        description: description || "",
+        state: state || false,
+        timeStart: timeStart || "",
+        timeEnd: timeEnd || "",
+
+    })
+    const onChange = (e) => {
+        setForm({ ...form, [e.target.name]: e.target.value })
+    }
+    console.log(form);
+    const onSubmit = (e) => {
+        e.preventDefault();
+        distpatch(updateSchedule(id, form))
+    }
     return (
-        <CForm className="form-horizontal">
+        <CForm onSubmit={(e) => { onSubmit(e) }} className="form-horizontal">
             <CFormGroup row>
                 <CCol md="3">
                     <CLabel htmlFor="title">Schedule title</CLabel>
                 </CCol>
                 <CCol xs="12" md="9">
-                    <CInput id="title" name="title" placeholder="Title" defaultValue={title} />
+                    <CInput onChange={e => onChange(e)} id="title" name="title" placeholder="Title" defaultValue={title} />
                 </CCol>
             </CFormGroup>
             <CFormGroup row>
@@ -24,7 +45,8 @@ const FormSchedule = ({ title, description, status, dateAndTime, startHour, dura
                 </CCol>
                 <CCol xs="12" md="9">
                     <CTextarea
-                        name="descriptiont"
+                        onChange={e => onChange(e)}
+                        name="description"
                         defaultValue={description}
                         id="description"
                         rows="9"
@@ -33,37 +55,53 @@ const FormSchedule = ({ title, description, status, dateAndTime, startHour, dura
                 </CCol>
             </CFormGroup>
             <CFormGroup row>
-                <CCol md="3">
-                    <CLabel htmlFor="status">Status</CLabel>
-                </CCol>
-                <CCol xs="12" md="9">
-                    <CInput id="status" name="status" placeholder="Status" defaultValue={status} />
-                </CCol>
-            </CFormGroup>
-            <CFormGroup row>
-                <CCol md="3">
-                    <CLabel htmlFor="date-input">Date</CLabel>
-                </CCol>
-                <CCol xs="12" md="9">
-                    <CInput type="date" id="date-input" name="date-input" placeholder="date" defaultValue={dateAndTime} />
+                <CCol md="3"><CLabel>Set state</CLabel></CCol>
+                <CCol md="9">
+                    {state == true ? <CFormGroup variant="checkbox" className="checkbox">
+                        <CInputCheckbox id="state" name="state" defaultChecked />
+                        <CLabel variant="checkbox" className="form-check-label" htmlFor="state">State</CLabel>
+                    </CFormGroup> : <CFormGroup variant="checkbox" className="checkbox">
+                            <CInputCheckbox id="state" name="state" />
+                            <CLabel variant="checkbox" className="form-check-label" htmlFor="state">State</CLabel>
+                        </CFormGroup>}
+
                 </CCol>
             </CFormGroup>
             <CFormGroup row>
                 <CCol md="3">
-                    <CLabel htmlFor="hour">Start hour</CLabel>
+                    <CLabel htmlFor="timeStart">Time Start</CLabel>
                 </CCol>
                 <CCol xs="12" md="9">
-                    <CInput id="hour" type="number" name="hour" placeholder="Start hour" defaultValue={startHour} />
+                    <input
+                        type="datetime-local"
+                        onChange={e => onChange(e)}
+                        name="timeStart"
+                        id="timeStart"
+                        defaultValue={timeStart}
+                    />
                 </CCol>
             </CFormGroup>
             <CFormGroup row>
                 <CCol md="3">
-                    <CLabel htmlFor="duration">Duration</CLabel>
+                    <CLabel htmlFor="timeEnd">Time End</CLabel>
                 </CCol>
                 <CCol xs="12" md="9">
-                    <CInput id="duration" type="number" name="duration" placeholder="Duration" defaultValue={duration} />
+                    <input
+                        type="datetime-local"
+                        onChange={e => onChange(e)}
+                        name="timeEnd"
+                        id="timeEnd"
+                        defaultValue={timeEnd}
+                    />
                 </CCol>
             </CFormGroup>
+            <CButton
+                type="submit"
+                style={{ float: "right" }}
+                color="success"
+            >
+                Submit
+            </CButton>
         </CForm>
     )
 }

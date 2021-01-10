@@ -25,7 +25,6 @@ class MqttHandler {
 
         // Mqtt error calback
         this.mqttClient.on('error', (err) => {
-            console.log(err);
             this.mqttClient.end();
         });
 
@@ -44,7 +43,6 @@ class MqttHandler {
         });
 
         this.mqttClient.on('close', () => {
-            this.setStatus(false)
             console.log(`mqtt client disconnected`);
         });
     }

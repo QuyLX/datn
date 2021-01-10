@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react'
-import { CCard, CCardBody, CCol, CRow, CDataTable, CCardHeader } from '@coreui/react';
+import { CCard, CCardBody, CCol, CRow, CDataTable, CCardHeader, CButton, CBadge } from '@coreui/react';
 import Spinner from '../../../components/LoadingIndicator/Spinner';
 import Alert from '../../../components/Alert/Alerts';
 import Modal from '../../../components/Modal/Modal'
 import FormSchedule from '../../FormSubmit/FormSchedule';
-import { getUsersInused } from '../../../redux/actions/user'
+import ListUser from '../../FormSubmit/ListUser'
+import { getUsersInused, removeUserToUseDevice } from '../../../redux/actions/user'
 import { getSchedulesPerDevice } from '../../../redux/actions/schedule'
 import { getHistoriesPerDevice } from '../../../redux/actions/history'
 import { useSelector, useDispatch } from "react-redux"
@@ -13,9 +14,9 @@ const Device = ({ match }) => {
   const scheduleListOnDevice = useSelector(state => state.scheduleListOnDevice);
   const historyListPerDevice = useSelector(state => state.historyListPerDevice);
   const userListPerDevice = useSelector(state => state.userListPerDevice);
+  const { loading: loadUsers, data: dataUsers, error: errUsers } = userListPerDevice
   const { loading: loadSchedule, data: dataSchedule, error: errSchedule } = scheduleListOnDevice;
   const { loading: loadHistory, data: dataHistory, error: errHistory } = historyListPerDevice
-  const { loading: loadUsers, data: dataUsers, error: errUsers } = userListPerDevice
   const fields = [
     { key: 'name', _style: { width: '20%' } },
     { key: 'createdAt', _style: { width: '24%' } },
@@ -27,11 +28,29 @@ const Device = ({ match }) => {
       filter: false
     }
   ]
+  const fieldUser = [
+    { key: 'name', _style: { width: '20%' } },
+    {
+      key: 'remove',
+      label: '',
+      _style: { width: '1%' },
+      sorter: false,
+      filter: false
+    }
+  ]
+  const fieldsHistories = [
+    { key: 'user', _style: { width: '20%' } },
+    { key: 'state', _style: { width: '20%' } },
+    { key: 'createdAt', _style: { width: '20%' } },
+  ]
 
   useEffect(() => {
-    dispatch(getUsersInused(match.params.id));
-    dispatch(getSchedulesPerDevice(match.params.id));
-    dispatch(getHistoriesPerDevice(match.params.id));
+    Promise.all([
+      dispatch(getUsersInused(match.params.id)),
+      dispatch(getSchedulesPerDevice(match.params.id)),
+      dispatch(getHistoriesPerDevice(match.params.id))
+    ])
+
   }, [dispatch, match.params.id]);
   return (
     <>
@@ -98,15 +117,15 @@ const Device = ({ match }) => {
                           <Modal
                             type="Add user to use this device"
                             title="User info"
-                            body={`Add user`}
+                            body={<ListUser deviceId={match.params.id} />}
                             size="lg"
                             color="info"
                           />
                         </CCardHeader>
                         <CCardBody>
                           <CDataTable
-                            items={dataUsers.users}
-                            fields={fields}
+                            items={dataUsers && dataUsers.data && dataUsers.data.users}
+                            fields={fieldUser}
                             columnFilter
                             tableFilter
                             footer
@@ -115,7 +134,32 @@ const Device = ({ match }) => {
                             hover
                             sorter
                             pagination
-                           
+                            scopedSlots={{
+                              'remove':
+                                (item, index) => {
+                                  return (
+                                    <td className="py-2">
+                                      <Modal
+                                        type="Remove"
+                                        title="Remove User for this device"
+                                        body={<>
+                                          <b>{`Do you want delete ${ item.name }?`}</b>
+                                          <CButton
+                                            color="danger"
+                                            onClick={() => { dispatch(removeUserToUseDevice(match.params.id, item._id)) }}
+                                            style={{ float: "right" }}
+                                          >
+                                            Remove
+                                    </CButton>
+                                        </>}
+                                        size="sm"
+                                        color="danger"
+                                      />
+                                    </td>
+                                  )
+                                },
+                            }}
+
                           />
                         </CCardBody>
                       </CCard>
@@ -129,16 +173,16 @@ const Device = ({ match }) => {
       {loadHistory ? (
         <Spinner />
       ) : errHistory ? (
-          <Alert color="danger" msg={errHistory.message} />
+        <Alert color="danger" msg={errHistory.message} />
       ) : (
-      <CRow>
-        <CCol sm={12} >
-          <span className="h4">History of device</span>
-        </CCol>
-        <CCol sm={12}>
-          <CDataTable
-                  items={dataHistory.data}
-                  fields={fields}
+            <CRow>
+              <CCol sm={12} >
+                <span className="h4">History of device</span>
+              </CCol>
+              <CCol sm={12}>
+                <CDataTable
+                  items={dataHistory && dataHistory.data}
+                  fields={fieldsHistories}
                   columnFilter
                   tableFilter
                   footer
@@ -147,8 +191,18 @@ const Device = ({ match }) => {
                   hover
                   sorter
                   pagination
-          />
-        </CCol>
+                  scopedSlots={{
+                    'state':
+                      (item) => (
+                        <td>
+                          {item.state === true ? <CBadge color="success">
+                            Bật
+                            </CBadge> : <CBadge color="danger">Tắt</CBadge>}
+                        </td>
+                      )
+                  }}
+                />
+              </CCol>
             </CRow>
           )}
     </>

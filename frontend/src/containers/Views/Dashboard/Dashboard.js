@@ -69,7 +69,7 @@ const Dashboard = () => {
                     </CCol>
                     <CCol sm="6" md="3">
                         <CWidgetProgressIcon
-                            header={`${ weather.main.temp_min }-${ weather.main.temp_max } °c`}
+                            header={`${ weather.main.temp } °c`}
                             text="Nhiệt độ"
                             color="gradient-primary"
                         >

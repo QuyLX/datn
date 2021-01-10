@@ -10,26 +10,17 @@ const Histories = () => {
     const dispatch = useDispatch();
     const historyList = useSelector(state => state.historyList);
     const { loading, error, data } = historyList
-
+    console.log(data);
     useEffect(() => {
         dispatch(getHistories())
     }, [dispatch]);
     const fields = [
-        { key: 'name', _style: { width: '40%' } },
-        'registered',
-        { key: 'role', _style: { width: '20%' } },
-        { key: 'status', _style: { width: '20%' } }
+        { key: 'user', _style: { width: '20%' } },
+        { key: 'state', _style: { width: '20%' } },
+        { key: 'device', _style: { width: '20%' } },
+        { key: 'createdAt', _style: { width: '20%' } },
     ]
 
-    const getBadge = (status) => {
-        switch (status) {
-            case 'Active': return 'success'
-            case 'Inactive': return 'secondary'
-            case 'Pending': return 'warning'
-            case 'Banned': return 'danger'
-            default: return 'primary'
-        }
-    }
     return (
         <>
             {loading ? (
@@ -38,7 +29,7 @@ const Histories = () => {
                 <Alert color="danger" msg={error.message} />
             ) : (
                         <CDataTable
-                            items={data.data}
+                            items={data && data.data}
                             fields={fields}
                             columnFilter
                             tableFilter
@@ -49,13 +40,18 @@ const Histories = () => {
                             sorter
                             pagination
                             scopedSlots={{
-                                'status':
+                                'state':
                                     (item) => (
                                         <td>
-                                            <CBadge color={getBadge(item.status)}>
-                                                {item.status}
-                                            </CBadge>
+                                            {item.state === true ? <CBadge color="success">
+                                                Bật
+                                            </CBadge> : <CBadge color="danger">Tắt</CBadge>}
+
                                         </td>
+                                    ),
+                                'device':
+                                    (item) => (
+                                        <td>{item.device.name}</td>
                                     )
                             }}
                         />)}
@@ -63,7 +59,7 @@ const Histories = () => {
     )
 }
 
-export default React.memo(Histories) 
+export default React.memo(Histories)
 
 
 

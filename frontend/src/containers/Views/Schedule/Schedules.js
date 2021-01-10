@@ -26,9 +26,9 @@ const Schedules = () => {
     const fields = [
         { key: 'title', _style: { width: '20%' } },
         { key: 'description', _style: { width: '10%' } },
-        { key: 'status', _style: { width: '10%' } },
-        { key: 'dateAndTime', _style: { width: '10%' } },
-        { key: 'endDateAndTime', _style: { width: '10%' } },
+        { key: 'state', _style: { width: '10%' } },
+        { key: 'timeStart', _style: { width: '10%' } },
+        { key: 'timeEnd', _style: { width: '10%' } },
         { key: 'createdAt', _style: { width: '10%' } },
         { key: 'user', _style: { width: '10%' } },
         {
@@ -53,13 +53,7 @@ const Schedules = () => {
             filter: false
         }
     ]
-    const getBadge = (status) => {
-        switch (status) {
-            case 'on': return 'success'
-            case 'off': return 'danger'
-            default: return 'primary'
-        }
-    }
+
     useEffect(() => {
         dispatch(getSchedules());
     }, [dispatch]);
@@ -87,14 +81,6 @@ const Schedules = () => {
                                             sorter
                                             pagination
                                             scopedSlots={{
-                                                'status':
-                                                    (item) => (
-                                                        <td>
-                                                            <CBadge color={getBadge(item.status)}>
-                                                                {item.status}
-                                                            </CBadge>
-                                                        </td>
-                                                    ),
                                                 'detail':
                                                     (item, index) => {
                                                         return (
@@ -118,10 +104,10 @@ const Schedules = () => {
                                                                     body={<FormSchedule
                                                                         title={item.title}
                                                                         description={item.description}
-                                                                        status={item.status}
-                                                                        dateAndTime={item.dateAndTime}
-                                                                        startHour={item.startHour}
-                                                                        duration={item.duration}
+                                                                        state={item.state}
+                                                                        timeStart={item.timeStart}
+                                                                        timeEnd={item.timeEnd}
+                                                                        id={item._id}
                                                                     />}
                                                                     size="lg"
                                                                     color="primary"
