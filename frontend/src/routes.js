@@ -11,7 +11,6 @@ const Schedules = React.lazy(() => import('./containers/Views/Schedule/Schedules
 const Schedule = React.lazy(() => import('./containers/Views/Schedule/Schedule'));
 const Histories = React.lazy(() => import('./containers/Views/History/Histories'));
 
-
 const routes = [
   { path: '/dashboard', name: 'Dashboard', component: Dashboard },
   { path: '/histories', name: 'Histories', component: Histories },

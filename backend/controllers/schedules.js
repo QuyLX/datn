@@ -193,13 +193,7 @@ exports.deleteSchedule = asyncHandler(async (req, res, next) => {
     if (req.user.role !== "admin" || req.user.id != schedule.user) {
         return next(new ErrorResponse(`User is not authorized`, 401))
     }
-    const msg = {
-        user: "",
-        device: "",
-        state: "",
-        timeStart: "",
-        timeEnd: "",
-    }
+    const msg = {}
     mqttClient.connect(`deleteSchedule`, `${ schedule.device }/${ req.user.id }`);
     mqttClient.sendMessage(`${ schedule.device }`, `${ req.user.id }/${ JSON.stringify(msg) }`);
 

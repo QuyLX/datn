@@ -55,14 +55,14 @@ const FormSchedule = ({ title, description, state, timeStart, timeEnd, id }) => 
                 </CCol>
             </CFormGroup>
             <CFormGroup row>
-                <CCol md="3"><CLabel>Set state</CLabel></CCol>
+                <CCol md="3"><CLabel>On/Off</CLabel></CCol>
                 <CCol md="9">
-                    {state == true ? <CFormGroup variant="checkbox" className="checkbox">
+                    {state === true ? <CFormGroup variant="checkbox" className="checkbox">
                         <CInputCheckbox id="state" name="state" defaultChecked />
-                        <CLabel variant="checkbox" className="form-check-label" htmlFor="state">State</CLabel>
+                        <CLabel variant="checkbox" className="form-check-label" htmlFor="state">On/Off</CLabel>
                     </CFormGroup> : <CFormGroup variant="checkbox" className="checkbox">
                             <CInputCheckbox id="state" name="state" />
-                            <CLabel variant="checkbox" className="form-check-label" htmlFor="state">State</CLabel>
+                            <CLabel variant="checkbox" className="form-check-label" htmlFor="state">On/Off</CLabel>
                         </CFormGroup>}
 
                 </CCol>

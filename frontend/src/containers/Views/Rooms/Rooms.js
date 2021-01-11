@@ -16,6 +16,7 @@ import Modal from '../../../components/Modal/Modal';
 import FormRoom from '../../FormSubmit/FormRoom';
 
 const Rooms = () => {
+   
     const history = useHistory()
     const dispatch = useDispatch();
     const roomList = useSelector(state => state.roomList);
@@ -59,6 +60,7 @@ const Rooms = () => {
                 <Alert color="danger" msg={error.message} />
             ) : (
                         <CRow>
+                            
                             <CCol sm={12} >
                                 <Modal
                                     type="Create new room"

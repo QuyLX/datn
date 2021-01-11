@@ -34,7 +34,12 @@ const ScheduleSchema = new mongoose.Schema({
         type: mongoose.Schema.ObjectId,
         ref: 'User',
         required: true
-    }
+    },
+    isDone: {
+        type: String,
+        enum: ['pending', 'success', 'fail'],
+        default: 'pending'
+    },
 });
 
 // Prevent user from submitting more than one schedule 

@@ -36,8 +36,8 @@ exports.getDevice = asyncHandler(async (req, res, next) => {
 
     if (!device) {
         return next(
-            new ErrorResponse(`No device with the id of ${ req.params.id }`),
-            404
+            new ErrorResponse(`No device with the id of ${ req.params.id }`, 404),
+            
         );
     }
 
@@ -55,8 +55,8 @@ exports.addDevice = asyncHandler(async (req, res, next) => {
     const room = await Room.findById(req.params.roomId);
     if (!room) {
         return next(
-            new ErrorResponse(`No room with the id of ${ req.params.roomId }`),
-            404
+            new ErrorResponse(`No room with the id of ${ req.params.roomId }`, 404),
+            
         );
     }
     const device = await Device.create(req.body);
@@ -86,8 +86,8 @@ exports.updateDevice = asyncHandler(async (req, res, next) => {
     // Make sure user is inused this device or role is Admin
     if (req.user.role !== "admin" && users.users.includes(req.user.id) !== true) {
         return next(
-            new ErrorResponse(`User ${ req.user.id } is not authorized to update device ${ device._id }`),
-            401
+            new ErrorResponse(`User ${ req.user.id } is not authorized to update device ${ device._id }`, 401),
+            
         );
     }
 
@@ -130,8 +130,8 @@ exports.deleteDevice = asyncHandler(async (req, res, next) => {
 
     if (!device) {
         return next(
-            new ErrorResponse(`No device with the id of ${ req.params.id }`),
-            404
+            new ErrorResponse(`No device with the id of ${ req.params.id }`, 404)
+            
         );
     }
     await device.remove();
@@ -153,8 +153,8 @@ exports.controlDevice = asyncHandler(async (req, res, next) => {
 
     if (!device) {
         return next(
-            new ErrorResponse(`No device with the id of ${ req.params.id }`),
-            404
+            new ErrorResponse(`No device with the id of ${ req.params.id }`, 404),
+            
         );
     }
 
@@ -163,8 +163,8 @@ exports.controlDevice = asyncHandler(async (req, res, next) => {
     // Make sure user is inused this device or role is Admin
     if (req.user.role !== "admin" && users.users.includes(req.user.id) !== true) {
         return next(
-            new ErrorResponse(`User ${ req.user.id } is not authorized to control device ${ device._id }`),
-            404
+            new ErrorResponse(`User ${ req.user.id } is not authorized to control device ${ device._id }`, 401),
+            
         );
     }
     const { state } = req.body;

@@ -7,7 +7,7 @@ import {
     CDataTable,
     CRow,
     CButton,
-    CBadge
+    
 } from '@coreui/react'
 import { useDispatch, useSelector } from 'react-redux';
 import { getSchedules } from '../../../redux/actions/schedule';

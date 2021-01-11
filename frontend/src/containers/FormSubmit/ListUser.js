@@ -38,7 +38,7 @@ const ListUser = ({ deviceId }) => {
                         id="name"
                         onChange={e => onChange(e)}
                     >
-                        {data.data.map(item => (
+                        {data && data.data.map(item => (
                             <option value={item._id} key={item._id}>{item.name}</option>
                         ))}
                     </CSelect>

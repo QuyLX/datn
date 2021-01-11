@@ -54,6 +54,7 @@ aedes.on('publish', async (publish, client) => {
     if (!client) {
         return
     }
+    
     await History.create(JSON.parse(publish.payload.toString()))
     console.log(`Published message ${ publish.messageId } of topic ${ publish.topic } from ${ client.id }`)
 })

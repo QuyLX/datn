@@ -9,7 +9,7 @@ import CIcon from '@coreui/icons-react'
 import { useSelector } from 'react-redux';
 import Alert from '../../../components/Alert/Alerts';
 import Spinner from '../../../components/LoadingIndicator/Spinner';
-import CardRoom from '../../../components/Mqtt/CardRoom';
+import SensorRoom from '../../../components/Mqtt/SensorRoom';
 const Dashboard = () => {
     const [weather, setWeather] = useState({});
     const [isLoaded, setIsLoaed] = useState(false)
@@ -115,12 +115,12 @@ const Dashboard = () => {
                             <CIcon name="cil-home" height="36" />
                         </CWidgetProgressIcon>)}
             </CCardGroup>
-            {loadRoom || loadRoom === undefined ? <Spinner /> : errRoom ? (
+            {loadRoom || loadRoom === undefined || loadDevice || loadDevice === undefined ? <Spinner /> : errRoom ? (
                 <Alert color="danger" msg={errRoom.message} />
             ) : (
                     <CRow>
                         {dataRoom.data.map(room => (
-                            <CardRoom title={room.name} key={room._id} id={room._id}/>
+                            <SensorRoom key={room._id} allDevice={dataDevice.data} roomId={room._id} id={room._id}/>
                         ))}
                     </CRow>)}
         </>

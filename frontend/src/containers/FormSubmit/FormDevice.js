@@ -6,15 +6,17 @@ import {
     CTextarea,
     CInput,
     CLabel,
-    CButton
+    CButton,
+    CInputCheckbox
 } from '@coreui/react'
 import { useDispatch } from 'react-redux';
 import { addDevice, updateDevice } from '../../redux/actions/device'
-const FormDevice = ({ name, description, icon, config, id, roomId }) => {
+const FormDevice = ({ name, description, icon, state ,config, id, roomId }) => {
     const distpatch = useDispatch();
     const [form, setForm] = useState({
         name: name || "",
         description: description || "",
+        state: state || false,
         icon: icon || "",
         config: config || ""
     })
@@ -76,6 +78,19 @@ const FormDevice = ({ name, description, icon, config, id, roomId }) => {
                         onChange={e => onChange(e)}
 
                     />
+                </CCol>
+            </CFormGroup>
+            <CFormGroup row>
+                <CCol md="3"><CLabel>On/Off</CLabel></CCol>
+                <CCol md="9">
+                    {state === true ? <CFormGroup variant="checkbox" className="checkbox">
+                        <CInputCheckbox onChange={e => onChange(e)} id="state" name="state" defaultChecked />
+                        <CLabel variant="checkbox" className="form-check-label" htmlFor="state">On/Off</CLabel>
+                    </CFormGroup> : <CFormGroup variant="checkbox" className="checkbox">
+                            <CInputCheckbox onChange={e => onChange(e)} id="state" name="state" />
+                            <CLabel variant="checkbox" className="form-check-label" htmlFor="state">On/Off</CLabel>
+                        </CFormGroup>}
+
                 </CCol>
             </CFormGroup>
             <CFormGroup row>
