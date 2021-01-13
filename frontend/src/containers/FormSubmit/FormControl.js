@@ -8,7 +8,8 @@ import {
     CInputCheckbox
 } from '@coreui/react'
 import { useDispatch } from 'react-redux';
-import { controlDevice } from '../../redux/actions/device'
+import { controlDevice } from '../../redux/actions/device';
+
 const FormControl = ({ id, state }) => {
     const distpatch = useDispatch();
     const [form, setForm] = useState({

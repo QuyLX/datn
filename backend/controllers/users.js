@@ -36,7 +36,7 @@ exports.getUsers = asyncHandler(async (req, res, next) => {
 exports.getUser = asyncHandler(async (req, res, next) => {
     const user = await User.findById(req.params.id)
     if (!user) {
-        return next(new ErrorResponse(`No user with id ${req.params.id}`, 404))
+        return next(new ErrorResponse(`No user with id ${ req.params.id }`, 404))
     }
     res.status(200).json({
         succcess: true,
@@ -81,14 +81,14 @@ exports.updateUser = asyncHandler(async (req, res, next) => {
         });
     } else {
         // Update user
-            const user = await User.findByIdAndUpdate(req.params.id, req.body, {
-                new: true,
-                runValidators: true
-            });
-            res.status(200).json({
-                succcess: true,
-                data: user
-            })
+        const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+            new: true,
+            runValidators: true
+        });
+        res.status(200).json({
+            succcess: true,
+            data: user
+        })
     }
 });
 // @desc Delete user
@@ -97,6 +97,10 @@ exports.updateUser = asyncHandler(async (req, res, next) => {
 // @access Private
 
 exports.deleteUser = asyncHandler(async (req, res, next) => {
+    // Admin cant delete admin account
+    if (req.user.id === req.params.id) {
+        return next(new ErrorResponse(`Admin cant delete admin account1`, 400))
+    }
     // Remove user use device
     if (req.params.deviceId) {
         if (req.user.role === "user") {

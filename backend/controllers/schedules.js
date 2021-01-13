@@ -2,7 +2,6 @@ const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middlewares/async');
 const Schedule = require('../models/Schedule');
 const Device = require('../models/Device');
-const mqttHandler = require('../../mqtt_broker/connBroker');
 
 // @desc      Get all schedule, get all schedule per device
 // @route     GET /api/schedules
@@ -71,8 +70,7 @@ exports.getSchedule = asyncHandler(async (req, res, next) => {
 exports.addSchedule = asyncHandler(async (req, res, next) => {
     req.body.device = req.params.deviceId;
     req.body.user = req.user.id;
-    const mqttClient = new mqttHandler();
-
+    
     // Validate time schedule
     const { timeStart, timeEnd } = req.body;
 
@@ -103,15 +101,7 @@ exports.addSchedule = asyncHandler(async (req, res, next) => {
                 404
             );
         }
-        const msg = {
-            user: req.user.name,
-            device: req.params.deviceId,
-            state: req.body.state,
-            timeStart: timeStart,
-            timeEnd: timeEnd,
-        }
-        mqttClient.connect(`addSchedule`, `${ req.body.device }/${ req.body.user }`);
-        mqttClient.sendMessage(`${ req.body.device }`, `${ req.body.user }/${ JSON.stringify(msg) }`);
+      
         const schedule = await Schedule.create(req.body)
 
         // const schedule = await Schedule.create(req.body);
@@ -128,7 +118,6 @@ exports.addSchedule = asyncHandler(async (req, res, next) => {
 // @access    Private
 exports.updateSchedule = asyncHandler(async (req, res, next) => {
     let schedule = await Schedule.findById(req.params.id);
-    const mqttClient = new mqttHandler();
 
     if (!schedule) {
         return next(
@@ -155,15 +144,7 @@ exports.updateSchedule = asyncHandler(async (req, res, next) => {
             new: true,
             runValidators: true
         });
-        const msg = {
-            user: req.user.name,
-            device: schedule.device,
-            state: req.body.state,
-            timeStart: timeStart,
-            timeEnd: timeEnd,
-        }
-        mqttClient.connect(`updateSchedule`, `${ schedule.device }/${ req.user.id }`);
-        mqttClient.sendMessage(`${ schedule.device }`, `${ req.user.id }/${ JSON.stringify(msg) }`);
+      
 
         res.status(200).json({
             success: true,
@@ -177,7 +158,6 @@ exports.updateSchedule = asyncHandler(async (req, res, next) => {
 // @access    Private
 exports.deleteSchedule = asyncHandler(async (req, res, next) => {
     const schedule = await Schedule.findById(req.params.id);
-    const mqttClient = new mqttHandler();
 
     if (schedule.timeEnd < Date.now() || (timeStart < Date.now && timeEnd)) {
         return next(new ErrorResponse(`Schedule in implement, You cant trigger this schedule`, 400))
@@ -193,9 +173,7 @@ exports.deleteSchedule = asyncHandler(async (req, res, next) => {
     if (req.user.role !== "admin" || req.user.id != schedule.user) {
         return next(new ErrorResponse(`User is not authorized`, 401))
     }
-    const msg = {}
-    mqttClient.connect(`deleteSchedule`, `${ schedule.device }/${ req.user.id }`);
-    mqttClient.sendMessage(`${ schedule.device }`, `${ req.user.id }/${ JSON.stringify(msg) }`);
+   
 
 
     await schedule.remove();

@@ -11,7 +11,7 @@ const hpp = require('hpp');
 const cors = require('cors');
 const connectDB = require('./config/db')
 const errorHandler = require('./middlewares/error');
-
+const mqttClient = require('../mqttBroker/connBroker');
 // Load env variable
 dotenv.config();
 // Connect to Database
@@ -84,3 +84,32 @@ process.on('unhandledRejection', (err, promise) => {
     // close server and exit process
     server.close(() => process.exit(1));
 })
+/************************ CONNECTION TO MQTT BROKER AND MESSAGE HANDLING *******************/
+
+/* Connecting to mqtt broker */
+
+mqttClient.on('connect', async () => {
+    console.log('Subscriber connected!')
+    const subTopics = "alo"
+    try {
+        mqttClient.subscribe(subTopics, { qos: process.env.QOS }, (error) => {
+            if (error) {
+                mqttClient.end()
+            }
+        })
+        /*
+         *  Client action on topic
+         *	Brief: topic is of the form: ${plantId}/:plantMetric
+         */
+        mqttClient.on('message', async (topic, msgBuffer) => {
+            try {
+            } catch (error) {
+                console.log(error)
+            }
+        })
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+

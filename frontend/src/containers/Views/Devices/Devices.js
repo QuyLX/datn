@@ -8,7 +8,6 @@ import {
   CRow,
   CButton,
   CBadge,
-  CSwitch,
 } from '@coreui/react'
 import { useDispatch, useSelector } from 'react-redux';
 import { getDevices, deleteDevice } from '../../../redux/actions/device';
@@ -16,6 +15,7 @@ import Spinner from '../../../components/LoadingIndicator/Spinner';
 import Alert from '../../../components/Alert/Alerts';
 import Modal from '../../../components/Modal/Modal'
 import FormDevice from '../../FormSubmit/FormDevice'
+import FormControl from '../../FormSubmit/FormControl'
 const Devices = () => {
   const history = useHistory()
   const dispatch = useDispatch();
@@ -113,7 +113,13 @@ const Devices = () => {
                           (item, index) => {
                             return (
                               <td className="py-2">
-                                <CSwitch className={'mx-1 mr-1'} variant={'3d'} color={'dark'} defaultChecked onChange={(e) => console.log(e.target.checked)} />
+                                <Modal
+                                  type="Update"
+                                  title="Device update"
+                                  body={<FormControl id={item._id} state={item.state} />}
+                                  size="lg"
+                                  color="primary"
+                                />
                               </td>
                             )
                           },

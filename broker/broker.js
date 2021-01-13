@@ -19,10 +19,10 @@ mongoose.connect(process.env.MONGO_URI, {
 const aedesOptions = { concurrency: 200, connectTimeout: 5000 }
 const aedes = require('aedes')(aedesOptions)
 const server = require('net').createServer(aedes.handle)
-const port = 1883
+const port = process.env.MQTT_BROKER_PORT || 1883
 
-server.listen(port, function () {
-    console.log('server listening on port', port)
+server.listen(port, '0.0.0.0', function () {
+    console.log('Broker listening on port', port)
 })
 
 /*******************************************************
@@ -30,8 +30,8 @@ server.listen(port, function () {
  ******************************************************/
 
 aedes.authenticate = (client, username, password, callback) => {
-    if (username && username === 'admin123') {
-        if (password && password == '123456') {
+    if (username && username === process.env.MQTT_USERNAME) {
+        if (password && password == process.env.MQTT_PASSWORD) {
             callback(null, true);
             console.log(`Client: ${ client.id } authenticated successfully`);
         }
@@ -54,9 +54,9 @@ aedes.on('publish', async (publish, client) => {
     if (!client) {
         return
     }
-    
-    await History.create(JSON.parse(publish.payload.toString()))
-    console.log(`Published message ${ publish.messageId } of topic ${ publish.topic } from ${ client.id }`)
+
+    // await History.create(JSON.parse(publish.payload.toString()))
+    console.log(`Published message ${ publish.payload.toString() } of topic ${ publish.topic } from ${ client.id }`)
 })
 
 /* Client subscribes to a topic */

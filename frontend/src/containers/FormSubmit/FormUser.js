@@ -98,7 +98,6 @@ const FormUser = ({ name, email, role, id }) => {
                         <option defaultValue={role}>{role}</option>
                         <option value="user">user</option>
                         <option value="moderator">morderator</option>
-                        <option value="admin">admin</option>
                     </CSelect>
                 </CCol>
             </CFormGroup>

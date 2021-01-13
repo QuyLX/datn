@@ -2,8 +2,6 @@ const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middlewares/async');
 const Device = require('../models/Device');
 const Room = require('../models/Room');
-const mqttHandler = require('../../mqtt_broker/connBroker');
-
 // @desc      Get all devices, get all devices for specific room
 // @route     GET /api/devices
 // @route     GET /api/rooms/:roomId/devices
@@ -37,7 +35,7 @@ exports.getDevice = asyncHandler(async (req, res, next) => {
     if (!device) {
         return next(
             new ErrorResponse(`No device with the id of ${ req.params.id }`, 404),
-            
+
         );
     }
 
@@ -56,7 +54,7 @@ exports.addDevice = asyncHandler(async (req, res, next) => {
     if (!room) {
         return next(
             new ErrorResponse(`No room with the id of ${ req.params.roomId }`, 404),
-            
+
         );
     }
     const device = await Device.create(req.body);
@@ -72,7 +70,6 @@ exports.addDevice = asyncHandler(async (req, res, next) => {
 // @access    Private
 exports.updateDevice = asyncHandler(async (req, res, next) => {
     let device = await Device.findById(req.params.id);
-    const mqttClient = new mqttHandler();
 
     if (!device) {
         return next(
@@ -87,30 +84,11 @@ exports.updateDevice = asyncHandler(async (req, res, next) => {
     if (req.user.role !== "admin" && users.users.includes(req.user.id) !== true) {
         return next(
             new ErrorResponse(`User ${ req.user.id } is not authorized to update device ${ device._id }`, 401),
-            
+
         );
     }
 
 
-    if (req.body.name) {
-        const msg = {
-            user: req.user.name,
-            device: req.params.id,
-            state: req.body.state,
-            dateModified: Date.now()
-        }
-        mqttClient.connect(`updateDevice`, `${ device.room }/${ req.body.name }`);
-        mqttClient.sendMessage(`${ device.room }`, `${ req.body.name }/${ JSON.stringify(msg) }`);
-    } else {
-        const msg = {
-            user: req.user.name,
-            device: req.params.id,
-            state: req.body.state,
-            dateModified: Date.now()
-        }
-        mqttClient.connect(`updateDevice`, `${ device.room }/${ device.name }`);
-        mqttClient.sendMessage(`${ device.room }/${ device.name }`, `${ JSON.stringify(msg)  }`);
-    }
 
     device = await Device.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
@@ -131,7 +109,7 @@ exports.deleteDevice = asyncHandler(async (req, res, next) => {
     if (!device) {
         return next(
             new ErrorResponse(`No device with the id of ${ req.params.id }`, 404)
-            
+
         );
     }
     await device.remove();
@@ -147,14 +125,13 @@ exports.deleteDevice = asyncHandler(async (req, res, next) => {
 //  @route  PUT /api/devices/:id/control
 //  @access Private
 exports.controlDevice = asyncHandler(async (req, res, next) => {
-    const mqttClient = new mqttHandler();
 
     let device = await Device.findById(req.params.id).select("+state");
 
     if (!device) {
         return next(
             new ErrorResponse(`No device with the id of ${ req.params.id }`, 404),
-            
+
         );
     }
 
@@ -164,18 +141,11 @@ exports.controlDevice = asyncHandler(async (req, res, next) => {
     if (req.user.role !== "admin" && users.users.includes(req.user.id) !== true) {
         return next(
             new ErrorResponse(`User ${ req.user.id } is not authorized to control device ${ device._id }`, 401),
-            
+
         );
     }
     const { state } = req.body;
-    const msg = {
-        user: req.user.name,
-        device: req.params.id,
-        state: req.body.state,
-        dateModified: Date.now()
-    }
-    mqttClient.connect(`controlDevice`, `${ device.room }/${ device.name }`);
-    mqttClient.sendMessage(`${ device.room }/${ device.name }`, `${JSON.stringify(msg)}`);
+
 
     device = await Device.findByIdAndUpdate(req.params.id, { state }, {
         new: true,
