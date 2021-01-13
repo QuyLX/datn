@@ -2,6 +2,9 @@ const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middlewares/async');
 const Device = require('../models/Device');
 const Room = require('../models/Room');
+const History = require('../models/History');
+const mqttClient = require('../../mqttBroker/connBroker');
+
 // @desc      Get all devices, get all devices for specific room
 // @route     GET /api/devices
 // @route     GET /api/rooms/:roomId/devices
@@ -57,6 +60,7 @@ exports.addDevice = asyncHandler(async (req, res, next) => {
 
         );
     }
+
     const device = await Device.create(req.body);
 
     res.status(200).json({
@@ -73,8 +77,7 @@ exports.updateDevice = asyncHandler(async (req, res, next) => {
 
     if (!device) {
         return next(
-            new ErrorResponse(`No device with the id of ${ req.params.id }`),
-            404
+            new ErrorResponse(`No device with the id of ${ req.params.id }`, 404)
         );
     }
 
@@ -87,8 +90,6 @@ exports.updateDevice = asyncHandler(async (req, res, next) => {
 
         );
     }
-
-
 
     device = await Device.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
@@ -131,7 +132,6 @@ exports.controlDevice = asyncHandler(async (req, res, next) => {
     if (!device) {
         return next(
             new ErrorResponse(`No device with the id of ${ req.params.id }`, 404),
-
         );
     }
 
@@ -144,13 +144,28 @@ exports.controlDevice = asyncHandler(async (req, res, next) => {
 
         );
     }
-    const { state } = req.body;
 
+    const topic = `${ device.room }/${ req.params.id }`;
+    const data = {
+        state: req.body.state
+    }
+    if (device.state !== req.body.state) {
+        mqttClient.publish(topic, JSON.stringify(data), { qos: 1, retain: true });
 
-    device = await Device.findByIdAndUpdate(req.params.id, { state }, {
+        const history = {
+            user: req.user.name,
+            deviceName: device.name,
+            state: req.body.state,
+            device: req.params.id
+        }
+
+        await History.create(history);
+    }
+    device = await Device.findByIdAndUpdate(req.params.id, req.body.state, {
         new: true,
         runValidators: true
     });
+
 
     res.status(200).json({
         success: true,

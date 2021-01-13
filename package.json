@@ -9,8 +9,8 @@
     "client": "npm start --prefix frontend",
     "broker": "nodemon broker/broker",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "data:import": "node server/seeder -i",
-    "data:destroy": "node server/seeder -d",
+    "data:import": "node backend/seeder -i",
+    "data:destroy": "node backend/seeder -d",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Quy",

@@ -21,6 +21,7 @@ const DeviceSchema = new mongoose.Schema({
     },
     state: {
         type: Boolean,
+        default: false,
         select: false  
     },
     createdAt: {
@@ -37,7 +38,11 @@ const DeviceSchema = new mongoose.Schema({
             type: mongoose.Schema.ObjectId,
             ref: 'User'
         }
-    ]
+    ],
+    available: {
+        type: Boolean,
+        default: true
+    }
 });
 
 // Cascade delete schedule, history when a device is deleted
