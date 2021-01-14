@@ -20,9 +20,9 @@ const DeviceSchema = new mongoose.Schema({
         required: [true, 'Please add a icon name']
     },
     state: {
-        type: Boolean,
-        default: false,
-        select: false  
+        type: String,
+        enum: ['on', 'off'],
+        default: 'off'
     },
     createdAt: {
         type: Date,
