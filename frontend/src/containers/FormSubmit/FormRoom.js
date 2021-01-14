@@ -12,7 +12,7 @@ import { useDispatch } from 'react-redux';
 import { addRoom, updateRoom, getRooms } from '../../redux/actions/room'
 
 
-const FormRoom = ({ name, description, icon, id, toggle }) => {
+const FormRoom = ({ name, description, icon, id }) => {
     const distpatch = useDispatch();
     const [form, setForm] = useState({
         name: name || "",
@@ -32,7 +32,6 @@ const FormRoom = ({ name, description, icon, id, toggle }) => {
         e.preventDefault();
         checkTypeOfAction(name, form);
         distpatch(getRooms())
-        toggle();
     }
     return (
         <CForm onSubmit={(e) => { onSubmit(e) }} className="form-horizontal">

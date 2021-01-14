@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     CCard,
     CCardBody,
@@ -14,11 +14,13 @@ import Alert from '../../../components/Alert/Alerts';
 import Modal from '../../../components/Modal/Modal';
 import FormDevice from '../../FormSubmit/FormDevice'
 import { useDispatch, useSelector } from 'react-redux';
-import { getDevicesInRoom, deleteDevice } from '../../../redux/actions/device'
+import { getDevicesInRoom, deleteDevice, controlDevice } from '../../../redux/actions/device'
 const Room = ({ match }) => {
     const dispatch = useDispatch();
     const deviceListInRoom = useSelector(state => state.deviceListInRoom);
     const { data: dataList ,loading, error } = deviceListInRoom;
+    const [checked, setChecked] = useState("")
+    console.log(checked);
     const fields = [
         { key: 'name', _style: { width: '20%' } },
         {
@@ -115,7 +117,7 @@ const Room = ({ match }) => {
                                                     (item, index) => {
                                                         return (
                                                             <td className="py-2">
-                                                                <CSwitch className={'mx-1 mr-1'} variant={'3d'} color={'dark'} defaultChecked onChange={(e) => console.log(e.target.checked)} />
+                                                                <CSwitch className={'mx-1 mr-1'} variant={'3d'} color={'dark'} defaultChecked={item.state === "on" ? true : false} onChange={(e) => setChecked(e.target.checked)} onClick={() => dispatch(controlDevice(item._id, checked ? "on" : "off"))}/>
                                                             </td>
                                                         )
                                                     },
@@ -127,7 +129,7 @@ const Room = ({ match }) => {
                                                                 <Modal
                                                                     type="Update"
                                                                     title="Device update"
-                                                                    body={<FormDevice id={item._id} name={item.name} description={item.description} config={item.config} icon={item.icon} />}
+                                                                    body={<FormDevice id={item._id} name={item.name} description={item.description} config={item.config} icon={item.icon} state={item.state}/>}
                                                                     size="lg"
                                                                     color="primary"
                                                                 />

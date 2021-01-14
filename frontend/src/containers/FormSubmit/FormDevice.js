@@ -10,16 +10,27 @@ import {
     CInputCheckbox
 } from '@coreui/react'
 import { useDispatch } from 'react-redux';
-import { addDevice, updateDevice } from '../../redux/actions/device'
+import Editor from 'react-simple-code-editor';
+import {highlight, languages} from 'prismjs/components/prism-core';
+import 'prismjs/components/prism-clike';
+import 'prismjs/components/prism-javascript';
+import { addDevice, updateDevice, getDevices } from '../../redux/actions/device'
 const FormDevice = ({ name, description, icon, state ,config, id, roomId }) => {
+    const [code, setCode] = useState(`{
+        // Config device in here
+}`);
+
+    const [checked, setChecked] = useState(state === "on" ? true : false);
     const distpatch = useDispatch();
     const [form, setForm] = useState({
         name: name || "",
         description: description || "",
-        state: state || false,
+        state: state || "on",
         icon: icon || "",
         config: config || ""
     })
+    form.config = code;
+    checked ? form.state = "on" : form.state = "off"
     const onChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value })
     }
@@ -30,7 +41,8 @@ const FormDevice = ({ name, description, icon, state ,config, id, roomId }) => {
     }
     const onSubmit = (e) => {
         e.preventDefault();
-        checkTypeOfAction(name, form)
+        checkTypeOfAction(name, form);
+        distpatch(getDevices());
     }
     return (
         <CForm onSubmit={(e) => { onSubmit(e) }} className="form-horizontal">
@@ -83,13 +95,10 @@ const FormDevice = ({ name, description, icon, state ,config, id, roomId }) => {
             <CFormGroup row>
                 <CCol md="3"><CLabel>On/Off</CLabel></CCol>
                 <CCol md="9">
-                    {state === true ? <CFormGroup variant="checkbox" className="checkbox">
-                        <CInputCheckbox onChange={e => onChange(e)} id="state" name="state" defaultChecked />
+                    <CFormGroup variant="checkbox" className="checkbox">
+                        <CInputCheckbox onChange={() => setChecked(!checked)} id="state" name="state" defaultChecked={checked} />
                         <CLabel variant="checkbox" className="form-check-label" htmlFor="state">On/Off</CLabel>
-                    </CFormGroup> : <CFormGroup variant="checkbox" className="checkbox">
-                            <CInputCheckbox onChange={e => onChange(e)} id="state" name="state" />
-                            <CLabel variant="checkbox" className="form-check-label" htmlFor="state">On/Off</CLabel>
-                        </CFormGroup>}
+                    </CFormGroup>
 
                 </CCol>
             </CFormGroup>
@@ -98,13 +107,15 @@ const FormDevice = ({ name, description, icon, state ,config, id, roomId }) => {
                     <CLabel htmlFor="config">Config</CLabel>
                 </CCol>
                 <CCol xs="12" md="9">
-                    <CTextarea
-                        name="config"
-                        defaultValue={config}
-                        id="config"
-                        rows="9"
-                        placeholder="config..."
-                        onChange={e => onChange(e)}
+                    <Editor
+                        value={code}
+                        onValueChange={code => setCode(code)}
+                        highlight={code => highlight(code, languages.js)}
+                        padding={10}
+                        style={{
+                        fontFamily: '"Fira code", "Fira Mono", monospace',
+                        fontSize: 12,
+                        }}
                     />
                 </CCol>
             </CFormGroup>

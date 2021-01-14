@@ -51,7 +51,7 @@ const Histories = () => {
                                     ),
                                 'device':
                                     (item) => (
-                                        <td>{item.device.name}</td>
+                                       <td>{item.device.deviceName}</td>
                                     )
                             }}
                         />)}

@@ -16,11 +16,10 @@ import Modal from '../../../components/Modal/Modal';
 import FormRoom from '../../FormSubmit/FormRoom';
 
 const Rooms = () => {
-    const [active, setActive] = useState(false);
-    const handleChange = () => {
-        setActive(!active)
-    }
-    console.log(active)
+    // const [active, setActive] = useState(false);
+    // const handleChange = () => {
+    //     setActive(!active)
+    // }
     const history = useHistory()
     const dispatch = useDispatch();
     const roomList = useSelector(state => state.roomList);
@@ -54,7 +53,7 @@ const Rooms = () => {
     ]
     useEffect(() => {
         dispatch(getRooms());
-    }, [dispatch]);
+    }, [dispatch, deleteRoom]);
 
     return (
         <>
@@ -64,16 +63,13 @@ const Rooms = () => {
                 <Alert color="danger" msg={error.message} />
             ) : (
                         <CRow>
-                            
                             <CCol sm={12} >
                                 <Modal
                                     type="Create new room"
                                     title="Room info"
-                                    body={<FormRoom toggle={handleChange} />}
+                                    body={<FormRoom />}
                                     size="lg"
                                     color="info"
-                                    active={handleChange}
-                                    modal={active}
                                 />
                             </CCol>
                             <CCol sm={12}>
@@ -126,12 +122,14 @@ const Rooms = () => {
                                                                     type="Delete"
                                                                     title="Room delete"
                                                                     body={
+                                                                        
                                                                         <>
                                                                             <b>{`Do you want delete ${ item.name }?`}</b>
                                                                             <CButton
                                                                                 color="danger"
-                                                                                onClick={() => { dispatch(deleteRoom(item._id)) }}
+                                                                                onClick={() => {  dispatch(deleteRoom(item._id));  dispatch(getRooms()) }}
                                                                                 style={{float: "right"}}
+                                                                                
                                                                             >
                                                                                 Delete
                                                                             </CButton>
