@@ -4,7 +4,7 @@ const connectDB = require('../backend/config/db')
 dotenv.config();
 
 // Load model
-// const DataSystem = require('../backend/models/DataSystem')
+// const RecordS = require('../backend/models/RecordS')
 
 // Connect to Database
 connectDB();
@@ -50,7 +50,6 @@ aedes.on('publish', async (publish, client) => {
     if (!client) {
         return
     }
-    // await History.create(JSON.parse(publish.payload.toString()))
     console.log(`Published message ${ publish.payload.toString() } of topic ${ publish.topic } from ${ client.id }`)
     // can push data to database
 
@@ -70,14 +69,15 @@ aedes.on('unsubscribe', (unsubscriptions, client) => {
 
 /* Connection acknowledgement sent from  server to client */
 aedes.on('connackSent', (connack, client) => {
+    if (connack.returnCode == 4) {
+        return console.log('Auth error.')
+    }
     console.log(`Ack sent to ${ client.id } with return code ${ connack.returnCode }`)
 })
 
 /* For QOS 1 or 2  - Packet successfully delivered to client */
 aedes.on('ack', async (packet, client) => {
-    if (connack.returnCode == 4) {
-        return console.log('Auth error.')
-    }
+    
     console.log(`Message ack\'d from ${ client.id }`)
 })
 

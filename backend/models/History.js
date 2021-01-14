@@ -5,10 +5,19 @@ const HistorySchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    state: Boolean,
+    state: {
+        type: String,
+        enum: ['on', 'off']
+    },
     deviceName: {
         type: String,
         required: true
+    },
+    dataUpdate: {
+        type: String,
+    },
+    typeAction: {
+        type: String,
     },
     device: {
         type: mongoose.Schema.ObjectId,

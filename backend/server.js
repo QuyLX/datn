@@ -95,7 +95,7 @@ process.on('unhandledRejection', (err, promise) => {
 mqttClient.on("connect", async () => {
     try {
         const devices = await Device.find();
-        const deviceRoomTopics = devices.map(item => `${ item.room }/${ item._id }`);
+        const deviceRoomTopics = devices.map(item => `${ item.room._id }/${ item._id }`);
         // const schedulesTopics = devices.map(item => `${ item._id }/schedules`);
         // const topics = deviceRoomTopics.concat(schedulesTopics);
         mqttClient.subscribe(deviceRoomTopics, { qos: process.env.QOS }, (error) => {

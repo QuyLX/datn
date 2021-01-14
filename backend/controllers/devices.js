@@ -90,11 +90,19 @@ exports.updateDevice = asyncHandler(async (req, res, next) => {
 
         );
     }
-
+    const history = {
+        user: req.user.name,
+        deviceName: device.name,
+        device: req.params.id,
+        dataUpdate: JSON.stringify(req.body),
+        typeAction: 'update'
+    }
+    await History.create(history);
     device = await Device.findByIdAndUpdate(req.params.id, req.body, {
         new: true,
         runValidators: true
     });
+    
     res.status(200).json({
         success: true,
         data: device
@@ -149,18 +157,17 @@ exports.controlDevice = asyncHandler(async (req, res, next) => {
     const data = {
         state: req.body.state
     }
-    if (device.state !== req.body.state) {
-        mqttClient.publish(topic, JSON.stringify(data), { qos: 1, retain: true });
+    mqttClient.publish(topic, JSON.stringify(data), { qos: 1, retain: true });
 
-        const history = {
-            user: req.user.name,
-            deviceName: device.name,
-            state: req.body.state,
-            device: req.params.id
-        }
-
-        await History.create(history);
+    const history = {
+        user: req.user.name,
+        deviceName: device.name,
+        state: req.body.state,
+        device: req.params.id,
+        typeAction: 'control'
     }
+    await History.create(history);
+
     device = await Device.findByIdAndUpdate(req.params.id, req.body.state, {
         new: true,
         runValidators: true
