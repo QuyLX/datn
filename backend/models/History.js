@@ -1,20 +1,33 @@
 const mongoose = require('mongoose');
 
 const HistorySchema = new mongoose.Schema({
-    data: String,
-    createdAt: {
-        type: Date,
-        default :Date.now()
+    user: {
+        type: String,
+        required: true
     },
-    state: Boolean,
+    state: {
+        type: String,
+        enum: ['on', 'off']
+    },
+    deviceName: {
+        type: String,
+        required: true
+    },
+    dataUpdate: {
+        type: String,
+    },
+    typeAction: {
+        type: String,
+    },
     device: {
         type: mongoose.Schema.ObjectId,
         ref: 'Device',
         required: true
     },
-    user: {
-        type: String
-    }
+    createdAt: {
+        type: Date,
+        default: Date.now()
+    },
 });
 
 module.exports = mongoose.model('History', HistorySchema);

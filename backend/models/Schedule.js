@@ -10,7 +10,8 @@ const ScheduleSchema = new mongoose.Schema({
         required: [true, 'Please add a description for schedule']
     },
     state: {
-        type: Boolean,
+        type: String,
+        enum: ['on', 'off'],
         required: [true, 'Please add a state for control device']
     },
     timeStart: {

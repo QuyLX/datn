@@ -12,6 +12,11 @@ const cors = require('cors');
 const connectDB = require('./config/db')
 const errorHandler = require('./middlewares/error');
 const mqttClient = require('../mqttBroker/connBroker');
+
+// Load model to follow topic
+const Device = require('./models/Device');
+
+
 // Load env variable
 dotenv.config();
 // Connect to Database
@@ -87,29 +92,30 @@ process.on('unhandledRejection', (err, promise) => {
 /************************ CONNECTION TO MQTT BROKER AND MESSAGE HANDLING *******************/
 
 /* Connecting to mqtt broker */
-
-mqttClient.on('connect', async () => {
-    console.log('Subscriber connected!')
-    const subTopics = "alo"
+mqttClient.on("connect", async () => {
     try {
-        mqttClient.subscribe(subTopics, { qos: process.env.QOS }, (error) => {
-            if (error) {
-                mqttClient.end()
-            }
-        })
-        /*
-         *  Client action on topic
-         *	Brief: topic is of the form: ${plantId}/:plantMetric
-         */
-        mqttClient.on('message', async (topic, msgBuffer) => {
-            try {
-            } catch (error) {
-                console.log(error)
-            }
-        })
+        const devices = await Device.find();
+        const deviceRoomTopics = devices.map(item => `${ item.room._id }/${ item._id }`);
+        // const schedulesTopics = devices.map(item => `${ item._id }/schedules`);
+        // const topics = deviceRoomTopics.concat(schedulesTopics);
+        mqttClient.subscribe(deviceRoomTopics, { qos: process.env.QOS }, (error) => {
+            console.log(error);
+        });
+        //handle incoming messages
+        mqttClient.on('message', async (topic, message, packet) => {
+            console.log("message is " + message);
+            console.log("topic is " + topic);
+            console.log("packet is " + packet);
+        });
+        //handle errors
+        mqttClient.on("error", function (error) {
+            console.log("Can't connect" + error);
+            process.exit(1)
+        });
     } catch (error) {
-        console.log(error)
+        console.log(error);
     }
 })
+
 
 

@@ -13,5 +13,4 @@ const connectOptions = {
 /* Connect to broker and return client */
 const mqttClient = mqtt.connect(process.env.MQTT_BROKER_URL, connectOptions);
 
-
 module.exports = mqttClient 

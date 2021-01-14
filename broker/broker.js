@@ -1,27 +1,21 @@
-const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const connectDB = require('../backend/config/db')
 // Load env vars
 dotenv.config();
+
+// Load model
+// const RecordS = require('../backend/models/RecordS')
+
 // Connect to Database
 connectDB();
-// Load models
-const History = require('../backend/models/History');
 
-// Connect to DB
-mongoose.connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useCreateIndex: true,
-    useFindAndModify: false,
-    useUnifiedTopology: true
-});
 
 const aedesOptions = { concurrency: 200, connectTimeout: 5000 }
 const aedes = require('aedes')(aedesOptions)
 const server = require('net').createServer(aedes.handle)
 const port = process.env.MQTT_BROKER_PORT || 1883
 
-server.listen(port, '0.0.0.0', function () {
+server.listen(port, function () {
     console.log('Broker listening on port', port)
 })
 
@@ -46,6 +40,8 @@ aedes.authenticate = (client, username, password, callback) => {
 /* Fire when broker connected */
 aedes.on('clientReady', async (client) => {
     console.log(`Client ${ client.id } has connected!`);
+    // can push data to database
+
 })
 
 /* Publish message reaches to the broker */
@@ -54,9 +50,9 @@ aedes.on('publish', async (publish, client) => {
     if (!client) {
         return
     }
-
-    // await History.create(JSON.parse(publish.payload.toString()))
     console.log(`Published message ${ publish.payload.toString() } of topic ${ publish.topic } from ${ client.id }`)
+    // can push data to database
+
 })
 
 /* Client subscribes to a topic */
@@ -73,14 +69,15 @@ aedes.on('unsubscribe', (unsubscriptions, client) => {
 
 /* Connection acknowledgement sent from  server to client */
 aedes.on('connackSent', (connack, client) => {
+    if (connack.returnCode == 4) {
+        return console.log('Auth error.')
+    }
     console.log(`Ack sent to ${ client.id } with return code ${ connack.returnCode }`)
 })
 
 /* For QOS 1 or 2  - Packet successfully delivered to client */
 aedes.on('ack', async (packet, client) => {
-    if (connack.returnCode == 4) {
-        return console.log('Auth error.')
-    }
+    
     console.log(`Message ack\'d from ${ client.id }`)
 })
 

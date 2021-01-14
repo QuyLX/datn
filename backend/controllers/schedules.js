@@ -13,8 +13,7 @@ exports.getSchedules = asyncHandler(async (req, res, next) => {
 
         if (!device) {
             return next(
-                new ErrorResponse(`No device with the id of ${ req.params.id }`),
-                404
+                new ErrorResponse(`No device with the id of ${ req.params.id }`, 404)
             );
         }
 
@@ -23,8 +22,7 @@ exports.getSchedules = asyncHandler(async (req, res, next) => {
         // Make sure user is inused this device or role is Admin
         if (req.user.role === "user" && users.users.includes(req.user.id) !== true) {
             return next(
-                new ErrorResponse(`User ${ req.user.id } is not authorized`),
-                401
+                new ErrorResponse(`User ${ req.user.id } is not authorized`, 401)
             );
         }
         const schedules = await Schedule.find({ device: req.params.deviceId });
@@ -70,7 +68,7 @@ exports.getSchedule = asyncHandler(async (req, res, next) => {
 exports.addSchedule = asyncHandler(async (req, res, next) => {
     req.body.device = req.params.deviceId;
     req.body.user = req.user.id;
-    
+
     // Validate time schedule
     const { timeStart, timeEnd } = req.body;
 
@@ -91,18 +89,22 @@ exports.addSchedule = asyncHandler(async (req, res, next) => {
                 )
             );
         };
-
         const users = await Device.findById(req.params.id).select('users');
 
         // Make sure user is inused this device or role is Admin
         if (req.user.role !== "admin" && users.users.includes(req.user.id) !== true) {
             return next(
-                new ErrorResponse(`User ${ req.user.id } is not authorized to update device ${ device._id }`),
-                404
+                new ErrorResponse(`User ${ req.user.id } is not authorized to update device ${ device._id }`, 404)
             );
         }
-      
+
+        if (device.available == false) {
+            return next(
+                new ErrorResponse(`Device not available`, 400)
+            );
+        }
         const schedule = await Schedule.create(req.body)
+        await Device.findByIdAndUpdate(req.params.deviceId, { available: false });
 
         // const schedule = await Schedule.create(req.body);
 
@@ -124,7 +126,7 @@ exports.updateSchedule = asyncHandler(async (req, res, next) => {
             new ErrorResponse(`No schedule with the id of ${ req.params.id }`, 404)
         );
     }
-    if (schedule.timeEnd < Date.now() || (timeStart < Date.now && timeEnd)) {
+    if (schedule.isDone !== "pending") {
         return next(new ErrorResponse(`Schedule in implement, You cant trigger this schedule`, 400))
     }
     const { timeStart, timeEnd } = req.body
@@ -144,7 +146,7 @@ exports.updateSchedule = asyncHandler(async (req, res, next) => {
             new: true,
             runValidators: true
         });
-      
+
 
         res.status(200).json({
             success: true,
@@ -159,9 +161,10 @@ exports.updateSchedule = asyncHandler(async (req, res, next) => {
 exports.deleteSchedule = asyncHandler(async (req, res, next) => {
     const schedule = await Schedule.findById(req.params.id);
 
-    if (schedule.timeEnd < Date.now() || (timeStart < Date.now && timeEnd)) {
+    if (schedule.timeEnd < Date.now() || (timeStart < Date.now() && timeEnd)) {
         return next(new ErrorResponse(`Schedule in implement, You cant trigger this schedule`, 400))
     }
+
     if (!schedule) {
         return next(
             new ErrorResponse(`No schedule with the id of ${ req.params.id }`, 404)
@@ -173,9 +176,8 @@ exports.deleteSchedule = asyncHandler(async (req, res, next) => {
     if (req.user.role !== "admin" || req.user.id != schedule.user) {
         return next(new ErrorResponse(`User is not authorized`, 401))
     }
-   
 
-
+    await Device.findByIdAndUpdate(req.params.deviceId, { available: true });
     await schedule.remove();
 
     res.status(200).json({

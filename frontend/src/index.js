@@ -5,7 +5,7 @@ import * as serviceWorker from './serviceWorker';
 import { icons } from './assets/icons'
 
 React.icons = icons
-
+console.log(process.env.REACT_APP_MQTT_USERNAME);
 ReactDOM.render(
     <App />,
   document.getElementById('root')

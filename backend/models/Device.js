@@ -20,8 +20,9 @@ const DeviceSchema = new mongoose.Schema({
         required: [true, 'Please add a icon name']
     },
     state: {
-        type: Boolean,
-        select: false  
+        type: String,
+        enum: ['on', 'off'],
+        default: 'off'
     },
     createdAt: {
         type: Date,
@@ -37,7 +38,11 @@ const DeviceSchema = new mongoose.Schema({
             type: mongoose.Schema.ObjectId,
             ref: 'User'
         }
-    ]
+    ],
+    available: {
+        type: Boolean,
+        default: true
+    }
 });
 
 // Cascade delete schedule, history when a device is deleted
