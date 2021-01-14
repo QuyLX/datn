@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useCallback, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import {
     CCard,
@@ -16,7 +16,11 @@ import Modal from '../../../components/Modal/Modal';
 import FormRoom from '../../FormSubmit/FormRoom';
 
 const Rooms = () => {
-   
+    const [active, setActive] = useState(false);
+    const handleChange = () => {
+        setActive(!active)
+    }
+    console.log(active)
     const history = useHistory()
     const dispatch = useDispatch();
     const roomList = useSelector(state => state.roomList);
@@ -65,9 +69,11 @@ const Rooms = () => {
                                 <Modal
                                     type="Create new room"
                                     title="Room info"
-                                    body={<FormRoom />}
+                                    body={<FormRoom toggle={handleChange} />}
                                     size="lg"
                                     color="info"
+                                    active={handleChange}
+                                    modal={active}
                                 />
                             </CCol>
                             <CCol sm={12}>

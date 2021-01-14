@@ -9,10 +9,10 @@ import {
     CButton
 } from '@coreui/react';
 import { useDispatch } from 'react-redux';
-import { addRoom, updateRoom } from '../../redux/actions/room'
+import { addRoom, updateRoom, getRooms } from '../../redux/actions/room'
 
 
-const FormRoom = ({ name, description, icon, id }) => {
+const FormRoom = ({ name, description, icon, id, toggle }) => {
     const distpatch = useDispatch();
     const [form, setForm] = useState({
         name: name || "",
@@ -30,7 +30,9 @@ const FormRoom = ({ name, description, icon, id }) => {
     }
     const onSubmit = (e) => {
         e.preventDefault();
-        checkTypeOfAction(name, form)
+        checkTypeOfAction(name, form);
+        distpatch(getRooms())
+        toggle();
     }
     return (
         <CForm onSubmit={(e) => { onSubmit(e) }} className="form-horizontal">
