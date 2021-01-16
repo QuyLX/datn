@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
     CCard,
     CCardBody,
@@ -6,20 +6,24 @@ import {
     CCol,
     CRow,
     CDataTable,
+    CSwitch
 } from '@coreui/react';
 import Spinner from '../../../components/LoadingIndicator/Spinner';
 import Alert from '../../../components/Alert/Alerts';
 import { useDispatch, useSelector } from 'react-redux';
-import { getDevicesInRoom } from '../../../redux/actions/device';
+import { getDevicesInRoom, controlDevice, getDevice } from '../../../redux/actions/device';
 import ModalUser from '../../../components/Modal/ModalUser';
 import ModalHistory from '../../../components/Modal/ModalHistory';
 import Modal from '../../../components/Modal/Modal';
-import FormControl from '../../FormSubmit/FormControl'
 import SensorRoom from '../../../components/Mqtt/SensorRoom'
 const RoomUser = ({ match }) => {
     const dispatch = useDispatch();
     const deviceListInRoom = useSelector(state => state.deviceListInRoom);
+    const userID = useSelector(state => state.auth.user.data._id);
+    console.log(userID);
     const { data: dataList, loading, error } = deviceListInRoom;
+    const [state, setState] = useState("");
+
     const fields = [
         { key: 'name', _style: { width: '20%' } },
         {
@@ -94,13 +98,10 @@ const RoomUser = ({ match }) => {
                                                     (item, index) => {
                                                         return (
                                                             <td className="py-2">
-                                                                <Modal
-                                                                    type="Control"
-                                                                    title="Control"
-                                                                    body={<FormControl id={item._id} />}
-                                                                    size="sm"
-                                                                    color="warning"
-                                                                />
+                                                                {item.users && item.users.includes(userID) ?
+                                                                (<CSwitch  className={'mx-1 mr-1'} variant={'3d'} color={'success'} defaultChecked={item.state === "on" ? true : false} onChange={(e) => setState(e.target.checked)} onClick={() => {dispatch(controlDevice(item._id, item.state === "off" ? {state : "on"} : {state : "off"})); dispatch(getDevicesInRoom(match.params.id))}} />) : (<CSwitch className={'mx-1 mr-1'} variant={'3d'}
+                                                                defaultChecked={item.state === "on" ? true : false} color={'success'} disabled />)
+                                                                }
                                                             </td>
                                                         )
                                                     },
@@ -111,7 +112,7 @@ const RoomUser = ({ match }) => {
                                                                 <ModalHistory
                                                                     type="History"
                                                                     title="History"
-                                                                    size="sm"
+                                                                    size="lg"
                                                                     color="primary"
                                                                     deviceId={item._id}
                                                                 />

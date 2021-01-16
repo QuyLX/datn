@@ -9,7 +9,7 @@ import {
     CButton
 } from '@coreui/react';
 import { useDispatch } from 'react-redux';
-import { createUser, updateUser } from '../../redux/actions/user'
+import { createUser, updateUser, getUsers } from '../../redux/actions/user'
 const FormUser = ({ name, email, role, id }) => {
     const distpatch = useDispatch();
     const [form, setForm] = useState({
@@ -34,7 +34,8 @@ const FormUser = ({ name, email, role, id }) => {
     }
     const onSubmit = (e) => {
         e.preventDefault();
-        checkTypeOfAction(name, form)
+        checkTypeOfAction(name, form);
+        distpatch(getUsers());
     }
     return (
         <CForm onSubmit={(e) => { onSubmit(e) }} className="form-horizontal">

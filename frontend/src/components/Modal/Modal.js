@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { CButton, CModal, CModalHeader, CModalBody, CModalFooter } from '@coreui/react'
 
-const Modal = ({ type, title, body, size, color , active}) => {
+const Modal = ({ type, title, body, size, color}) => {
     const [modal, setModal] = useState(false);
     const toggle = () => {
         setModal(!modal)

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import {
   CCard,
@@ -8,20 +8,20 @@ import {
   CRow,
   CButton,
   CBadge,
+  CSwitch
 } from '@coreui/react'
 import { useDispatch, useSelector } from 'react-redux';
-import { getDevices, deleteDevice } from '../../../redux/actions/device';
+import { getDevices, deleteDevice, controlDevice } from '../../../redux/actions/device';
 import Spinner from '../../../components/LoadingIndicator/Spinner';
 import Alert from '../../../components/Alert/Alerts';
 import Modal from '../../../components/Modal/Modal'
 import FormDevice from '../../FormSubmit/FormDevice'
-import FormControl from '../../FormSubmit/FormControl'
 const Devices = () => {
   const history = useHistory()
   const dispatch = useDispatch();
   const deviceList = useSelector((state) => state.deviceList);
   const { loading, error, data } = deviceList
-
+   const [state, setState] = useState("")
   const fields = [
     { key: 'name', _style: { width: '20%' } },
     {
@@ -113,13 +113,7 @@ const Devices = () => {
                           (item, index) => {
                             return (
                               <td className="py-2">
-                                <Modal
-                                  type="Update"
-                                  title="Device update"
-                                  body={<FormControl id={item._id} state={item.state} />}
-                                  size="lg"
-                                  color="primary"
-                                />
+                                <CSwitch className={'mx-1 mr-1'} variant={'3d'} color={'dark'} defaultChecked={item.state === "on" ? true : false} onChange={(e) => setState(e.target.checked)} onClick={() => dispatch(controlDevice(item._id, state ? {state : "on"} : {state : "off"}))}/>
                               </td>
                             )
                           },

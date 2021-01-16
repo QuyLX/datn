@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
     CCol,
     CForm,
@@ -42,10 +42,10 @@ const FormDevice = ({ name, description, icon, state ,config, id, roomId }) => {
     const onSubmit = (e) => {
         e.preventDefault();
         checkTypeOfAction(name, form);
-        distpatch(getDevices());
+        distpatch(getDevices())    
     }
     return (
-        <CForm onSubmit={(e) => { onSubmit(e) }} className="form-horizontal">
+        <CForm onSubmit={(e) => { onSubmit(e)}} className="form-horizontal">
             <CFormGroup row>
                 <CCol md="3">
                     <CLabel htmlFor="name">Device name</CLabel>

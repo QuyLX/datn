@@ -10,7 +10,7 @@ import {
     CButton
 } from '@coreui/react';
 import { useDispatch } from 'react-redux';
-import { updateSchedule } from '../../redux/actions/schedule'
+import { updateSchedule, getSchedules } from '../../redux/actions/schedule'
 const FormSchedule = ({ title, description, state, timeStart, timeEnd, id }) => {
     const distpatch = useDispatch();
     const [form, setForm] = useState({
@@ -27,7 +27,8 @@ const FormSchedule = ({ title, description, state, timeStart, timeEnd, id }) => 
     console.log(form);
     const onSubmit = (e) => {
         e.preventDefault();
-        distpatch(updateSchedule(id, form))
+        distpatch(updateSchedule(id, form));
+        distpatch(getSchedules())
     }
     return (
         <CForm onSubmit={(e) => { onSubmit(e) }} className="form-horizontal">
