@@ -14,12 +14,11 @@ import Alert from '../../../components/Alert/Alerts';
 import Modal from '../../../components/Modal/Modal';
 import FormDevice from '../../FormSubmit/FormDevice'
 import { useDispatch, useSelector } from 'react-redux';
-import { getDevicesInRoom, deleteDevice, controlDevice } from '../../../redux/actions/device'
+import { getDevicesInRoom, deleteDevice, controlDevice, getDevices } from '../../../redux/actions/device'
 const Room = ({ match }) => {
     const dispatch = useDispatch();
     const deviceListInRoom = useSelector(state => state.deviceListInRoom);
     const { data: dataList ,loading, error } = deviceListInRoom;
-    const form ={};
     const [state, setState] = useState("")
     const fields = [
         { key: 'name', _style: { width: '20%' } },
@@ -67,7 +66,8 @@ const Room = ({ match }) => {
         }
     }
     useEffect(() => {
-        dispatch(getDevicesInRoom(match.params.id))
+        dispatch(getDevicesInRoom(match.params.id));
+        dispatch(getDevices())
     }, [dispatch, match.params.id]);
     return (
         <>

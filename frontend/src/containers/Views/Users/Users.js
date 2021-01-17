@@ -18,8 +18,7 @@ const Users = () => {
   const dispatch = useDispatch();
   const userList = useSelector(state => state.userList);
   const history = useHistory()
-  const { loading, error, data } = userList
-
+  const { loading, error, data } = userList;
   const fields = [
     { key: 'name', _style: { width: '20%' } },
     { key: 'email', _style: { width: '24%' } },
@@ -49,7 +48,7 @@ const Users = () => {
   ]
   useEffect(() => {
     dispatch(getUsers())
-  }, [dispatch]);
+  }, [deleteUser]);
 
   return (
     <>
@@ -127,7 +126,7 @@ const Users = () => {
                                     <b>{`Do you want delete ${ item.name }?`}</b>
                                     <CButton
                                       color="danger"
-                                      onClick={() => { dispatch(deleteUser(item._id)) }}
+                                      onClick={() => Promise.all([dispatch(deleteUser(item._id))])}
                                       style={{ float: "right" }}
                                     >
                                       Delete

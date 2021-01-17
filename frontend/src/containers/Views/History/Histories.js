@@ -43,15 +43,13 @@ const Histories = () => {
                                 'state':
                                     (item) => (
                                         <td>
-                                            {item.state === true ? <CBadge color="success">
-                                                Bật
-                                            </CBadge> : <CBadge color="danger">Tắt</CBadge>}
+                                            <CBadge color="danger">{item.state === "on" ? "Bật" : "Tắt"}</CBadge>
 
                                         </td>
                                     ),
                                 'device':
                                     (item) => (
-                                       <td>{item.device.deviceName}</td>
+                                       <td>{item.deviceName}</td>
                                     )
                             }}
                         />)}

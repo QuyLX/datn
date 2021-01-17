@@ -149,7 +149,6 @@ exports.controlDevice = asyncHandler(async (req, res, next) => {
     if (req.user.role !== "admin" && users.users.includes(req.user.id) !== true) {
         return next(
             new ErrorResponse(`User ${ req.user.id } is not authorized to control device ${ device._id }`, 401),
-
         );
     }
 

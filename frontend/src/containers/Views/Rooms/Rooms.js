@@ -16,10 +16,6 @@ import Modal from '../../../components/Modal/Modal';
 import FormRoom from '../../FormSubmit/FormRoom';
 
 const Rooms = () => {
-    // const [active, setActive] = useState(false);
-    // const handleChange = () => {
-    //     setActive(!active)
-    // }
     const history = useHistory()
     const dispatch = useDispatch();
     const roomList = useSelector(state => state.roomList);

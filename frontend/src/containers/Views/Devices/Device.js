@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { CCard, CCardBody, CCol, CRow, CDataTable, CCardHeader, CButton, CBadge } from '@coreui/react';
+import { CCard, CCardBody, CCol, CRow, CDataTable, CCardHeader, CButton, CBadge, CSwitch } from '@coreui/react';
 import Spinner from '../../../components/LoadingIndicator/Spinner';
 import Alert from '../../../components/Alert/Alerts';
 import Modal from '../../../components/Modal/Modal'
