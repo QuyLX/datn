@@ -127,7 +127,10 @@ const Rooms = () => {
                                                                             <b>{`Do you want delete ${ item.name }?`}</b>
                                                                             <CButton
                                                                                 color="danger"
-                                                                                onClick={() => {  dispatch(deleteRoom(item._id));  dispatch(getRooms()) }}
+                                                                                onClick={() => {  
+                                                                                    dispatch(deleteRoom(item._id));  
+                                                                                    dispatch(getRooms()) }
+                                                                                }
                                                                                 style={{float: "right"}}
                                                                                 
                                                                             >

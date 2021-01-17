@@ -168,7 +168,7 @@ exports.controlDevice = asyncHandler(async (req, res, next) => {
     }
     await History.create(history);
 
-    device = await Device.findByIdAndUpdate(req.params.id, req.body.state, {
+    device = await Device.findByIdAndUpdate(req.params.id, data, {
         new: true,
         runValidators: true
     });

@@ -1,5 +1,6 @@
 import axios from 'axios'
-import setAuthToken from '../../utils/setAuthToken'
+import setAuthToken from '../../utils/setAuthToken';
+
 import {
     REGISTER_FAIL,
     REGISTER_SUCCESS,
@@ -15,6 +16,8 @@ import {
 import { getRooms } from './room'
 import { getUsers } from './user'
 import { getDevices } from './device'
+ 
+
 // loaduser
 export const loaduser = () => async dispatch => {
     let token = localStorage.getItem("token");
@@ -29,13 +32,13 @@ export const loaduser = () => async dispatch => {
             await Promise.all([
                 dispatch(getRooms()),
                 dispatch(getUsers()),
-                dispatch(getDevices())
+                dispatch(getDevices()),
             ])
         } catch (error) {
             dispatch({
                 type: AUTH_ERROR,
                 payload: error
-            })
+            });
         }
     }
 }

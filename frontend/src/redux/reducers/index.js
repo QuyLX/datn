@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux';
 import changeState from './changeState';
 import auth from './auth'
+import {mqtt} from './mqtt'
 import { resetPassword } from './auth';
 import {
     createRoom,
@@ -46,6 +47,7 @@ import {
 export default combineReducers({
     changeState,
     auth,
+    mqtt: mqtt,
     resetPassword: resetPassword,
     createRoom: createRoom,
     deleteRoom: deleteRoom,

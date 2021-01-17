@@ -30,6 +30,7 @@
     "mongoose": "^5.11.8",
     "morgan": "^1.10.0",
     "mqtt": "^4.2.6",
+    "websocket-stream": "^5.5.2",
     "xss-clean": "^0.1.1",
     "yarn": "^1.22.10"
   },

@@ -72,11 +72,6 @@ const Login = ({ login, error, isAuthenticated }) => {
                         onChange={e => onChange(e)}
                       />
                     </CInputGroup>
-                    {error &&
-                      <CCol xs="12">
-                        <Alert color="danger" msg={error.message} />
-                      </CCol>
-                    }
                     <CRow>
                       <CCol xs="6">
                         <CButton type="submit"
@@ -89,6 +84,8 @@ const Login = ({ login, error, isAuthenticated }) => {
                   </CForm>
                 </CCardBody>
               </CCard>
+
+
               <CCard className=" py-5 d-md-down-none" style={{ width: '44%' }}>
                 <CCardBody className="text-center">
                   <div>

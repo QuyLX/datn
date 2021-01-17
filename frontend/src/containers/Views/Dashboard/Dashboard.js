@@ -120,7 +120,7 @@ const Dashboard = () => {
             ) : (
                     <CRow>
                         {dataRoom.data.map(room => (
-                            <SensorRoom key={room._id} allDevice={dataDevice.data} roomId={room._id} id={room._id}/>
+                            <SensorRoom key={room._id} allDevice={dataDevice.data} roomId={room._id} />
                         ))}
                     </CRow>)}
         </>

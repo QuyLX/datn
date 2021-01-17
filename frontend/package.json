@@ -16,7 +16,6 @@
     "classnames": "^2.2.6",
     "mqtt": "^4.2.6",
     "node-sass": "^4.14.1",
-    "prismjs": "^1.23.0",
     "prop-types": "^15.7.2",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
@@ -51,5 +50,9 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "http://127.0.0.1:5000"
+  "proxy": "http://127.0.0.1:5000",
+  "devDependencies": {
+    "@types/prismjs": "^1.16.2",
+    "prismjs": "^1.23.0"
+  }
 }

@@ -22,7 +22,6 @@ const DeviceSchema = new mongoose.Schema({
     state: {
         type: String,
         enum: ['on', 'off'],
-        default: 'off'
     },
     createdAt: {
         type: Date,

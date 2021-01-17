@@ -105,7 +105,7 @@ mqttClient.on("connect", async () => {
         mqttClient.on('message', async (topic, message, packet) => {
             console.log("message is " + message);
             console.log("topic is " + topic);
-            console.log("packet is " + packet);
+            console.log("packet is " + JSON.parse(packet));
         });
         //handle errors
         mqttClient.on("error", function (error) {

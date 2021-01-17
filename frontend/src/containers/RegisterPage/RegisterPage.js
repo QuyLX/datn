@@ -107,9 +107,6 @@ const RegisterPage = ({ isAuthenticated, error, register }) => {
                         onChange={e => onChange(e)}
                       />
                     </CInputGroup>
-                    <CCol md="9" lg="7" xl="6">
-                      {error && <Alert color="danger" msg={error.message} />}
-                    </CCol>
                     <CButton
                       className="mb-4"
                       type="submit"

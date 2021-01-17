@@ -10,7 +10,6 @@ import {
     RESET_PASSWORD_REQUEST,
     RESET_PASSWORD_SUCCESS
 } from '../constants/userConstant';
-
 const initialState = {
     token: localStorage.getItem('token'),
     isAuthenticated: null,

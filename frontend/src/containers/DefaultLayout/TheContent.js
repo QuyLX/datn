@@ -13,7 +13,6 @@ import { useSelector } from 'react-redux'
 
 const TheContent = () => {
   const { user } = useSelector((state) => state.auth);
-
   return user === null ? "" : user.data.role === "admin" ? (
     <main className="c-main">
       <CContainer fluid>

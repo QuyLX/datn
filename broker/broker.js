@@ -9,17 +9,23 @@ dotenv.config();
 // Connect to Database
 connectDB();
 
-
-const aedesOptions = { concurrency: 200, connectTimeout: 5000 }
-const aedes = require('aedes')(aedesOptions)
-const server = require('net').createServer(aedes.handle)
+const aedesOptions = { concurrency: 200, connectTimeout: 5000 };
+const aedes = require('aedes')({aedesOptions});
+const server = require('net').createServer(aedes.handle);
 const port = process.env.MQTT_BROKER_PORT || 1883
 
+const httpServer = require('http').createServer()
+const ws = require('websocket-stream')
+const wsPort = 8883
+
+ws.createServer({ server: httpServer }, aedes.handle)
 server.listen(port, function () {
     console.log('Broker listening on port', port)
 })
 
-/*******************************************************
+httpServer.listen(wsPort, function () {
+    console.log('Aedes MQTT-WS listening on port: ' + wsPort)
+    /*******************************************************
  *************** Broker Authentication *****************
  ******************************************************/
 
@@ -85,3 +91,7 @@ aedes.on('ack', async (packet, client) => {
 aedes.on('clientDisconnect', async (client) => {
     console.log(`Client ${ client.id } has disconnected`)
 })
+
+});
+
+
