@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   CCol,
   CCard,
@@ -6,23 +6,30 @@ import {
   CCardHeader,
   CRow,
   CCardFooter,
-} from "@coreui/react";
-import DeviceUser from "./DeviceUser";
-import CIcon from "@coreui/icons-react";
+} from '@coreui/react';
+import DeviceUser from './DeviceUser';
+import CIcon from '@coreui/icons-react';
 
-const CardRoomUser = ({ roomName, roomId, icon, allDevice, desc }) => {
+const CardRoomUser = ({
+  roomName,
+  roomId,
+  icon,
+  allDevice,
+  desc,
+  msgSensor,
+}) => {
   // get real time data in here
   return (
-    <CCol sm="12" md="6">
-      <CCard style={{ backgroundColor: "#ebedef", textAlign: "center" }}>
+    <CCol sm='12' md='6'>
+      <CCard style={{ backgroundColor: '#ebedef', textAlign: 'center' }}>
         <CCardHeader
           style={{
-            backgroundColor: "#ebedef",
-            color: "#768192",
+            backgroundColor: '#ebedef',
+            color: '#768192',
           }}
         >
           <b>{`${roomName}     `}</b>
-          <CIcon size="2xl" name={icon} />
+          <CIcon size='2xl' name={icon} />
         </CCardHeader>
         <CCardBody>
           <CRow>
@@ -39,6 +46,7 @@ const CardRoomUser = ({ roomName, roomId, icon, allDevice, desc }) => {
                       icon={item.icon}
                       users={item.users}
                       id={item._id}
+                      // msgSensor={msgSensor}
                     />
                   )
               )}
@@ -46,11 +54,11 @@ const CardRoomUser = ({ roomName, roomId, icon, allDevice, desc }) => {
         </CCardBody>
         <CCardFooter
           style={{
-            backgroundColor: "#ebedef",
-            color: "#768192",
+            backgroundColor: '#ebedef',
+            color: '#768192',
           }}
         >
-          <span className="h4">{desc}</span>
+          <span className='h4'>{desc}</span>
         </CCardFooter>
       </CCard>
     </CCol>

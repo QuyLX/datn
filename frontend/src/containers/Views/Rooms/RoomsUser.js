@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from "react";
-import { CCol, CRow, CWidgetProgressIcon } from "@coreui/react";
-import CIcon from "@coreui/icons-react";
+import React, { useEffect, useState } from 'react';
+import { CCol, CRow, CWidgetProgressIcon } from '@coreui/react';
+import CIcon from '@coreui/icons-react';
 
-import { useDispatch, useSelector } from "react-redux";
-import { getRooms } from "../../../redux/actions/room";
-import Spinner from "../../../components/Spinner/Spinner";
-import Alert from "../../../components/Alert/Alert";
-import CardRoomUser from "../../../components/Mqtt/CardRoomUser";
+import { useDispatch, useSelector } from 'react-redux';
+import { getRooms } from '../../../redux/actions/room';
+import { subscribe } from '../../../redux/actions/mqtt';
+import Spinner from '../../../components/Spinner/Spinner';
+import Alert from '../../../components/Alert/Alert';
+import CardRoomUser from '../../../components/Mqtt/CardRoomUser';
 
 const Rooms = () => {
   const [weather, setWeather] = useState({});
@@ -26,7 +27,12 @@ const Rooms = () => {
   const dispatch = useDispatch();
   const roomList = useSelector((state) => state.roomList);
   const deviceList = useSelector((state) => state.deviceList);
-
+  let topics =
+    deviceList.data &&
+    deviceList.data.data.map((item) => `${item.room._id}/${item._id}`);
+  let msgSensor = useSelector((state) => state.mqtt.msgSensor);
+  // msgSensor = msgSensor.msg ? Number(msgSensor.slice(0, 5)) : 0;
+  console.log(topics);
   const { loading: loadRoom, error: errRoom, data: dataRoom } = roomList;
   const {
     loading: loadDevice,
@@ -35,6 +41,7 @@ const Rooms = () => {
   } = deviceList;
   useEffect(() => {
     dispatch(getRooms());
+    // dispatch(subscribe(topics));
   }, [dispatch]);
 
   return (
@@ -43,17 +50,17 @@ const Rooms = () => {
         <Spinner />
       ) : errRoom || errDevice ? (
         <>
-          <Alert color="danger" msg={errDevice.message} />
-          <Alert color="danger" msg={errRoom.message} />
+          <Alert color='danger' msg={errDevice.message} />
+          <Alert color='danger' msg={errRoom.message} />
         </>
       ) : (
         <CRow>
           <CCol sm={12}>
             <CRow>
               <CCol>
-                <CIcon name="cil-cloudy" height="36" />
-                {"   "}
-                <span className="h3">Thời tiết hôm nay</span>
+                <CIcon name='cil-cloudy' height='36' />
+                {'   '}
+                <span className='h3'>Thời tiết hôm nay</span>
               </CCol>
               <CCol></CCol>
             </CRow>
@@ -62,32 +69,32 @@ const Rooms = () => {
                 <Spinner />
               ) : (
                 <>
-                  <CCol sm="6" md="3">
+                  <CCol sm='6' md='3'>
                     <CWidgetProgressIcon
                       header={`${weather.main.humidity} %`}
-                      text="Độ ẩm"
-                      color="gradient-info"
+                      text='Độ ẩm'
+                      color='gradient-info'
                     ></CWidgetProgressIcon>
                   </CCol>
-                  <CCol sm="6" md="3">
+                  <CCol sm='6' md='3'>
                     <CWidgetProgressIcon
                       header={`${weather.wind.speed} m/s`}
-                      text="Gió"
-                      color="gradient-success"
+                      text='Gió'
+                      color='gradient-success'
                     ></CWidgetProgressIcon>
                   </CCol>
-                  <CCol sm="6" md="3">
+                  <CCol sm='6' md='3'>
                     <CWidgetProgressIcon
                       header={`${weather.main.feels_like} °c`}
-                      text="Nhiệt độ cảm nhận"
-                      color="gradient-warning"
+                      text='Nhiệt độ cảm nhận'
+                      color='gradient-warning'
                     ></CWidgetProgressIcon>
                   </CCol>
-                  <CCol sm="6" md="3">
+                  <CCol sm='6' md='3'>
                     <CWidgetProgressIcon
                       header={`${weather.main.temp} °c`}
-                      text="Nhiệt độ"
-                      color="gradient-primary"
+                      text='Nhiệt độ'
+                      color='gradient-primary'
                     ></CWidgetProgressIcon>
                   </CCol>
                 </>
@@ -103,6 +110,7 @@ const Rooms = () => {
                 desc={item.description}
                 icon={item.icon}
                 allDevice={dataDevice.data}
+                // msgSensor={msgSensor}
               />
             ))}
         </CRow>

@@ -1,20 +1,19 @@
-import React, { useEffect } from "react";
-import { CCol, CCard, CCardBody, CCardHeader, CRow } from "@coreui/react";
-import Sensor from "./Sensor";
-import { subscribe } from "../../redux/actions/mqtt";
-import { useDispatch } from "react-redux";
-const SensorRoom = ({ roomName, roomId, allDevice, msg }) => {
+import React, { useEffect } from 'react';
+import { CCol, CCard, CCardBody, CCardHeader, CRow } from '@coreui/react';
+import Sensor from './Sensor';
+import { subscribe } from '../../redux/actions/mqtt';
+import { useDispatch } from 'react-redux';
+const SensorRoom = ({ roomName, roomId, allDevice, msg, msgSensor }) => {
   const dispatch = useDispatch();
   const topics = allDevice.map((item) => `${item.room._id}/${item._id}`);
-  console.log(msg);
   useEffect(() => {
     dispatch(subscribe(topics));
   }, [dispatch, topics]);
   return (
-    <CCol sm="12" md="6">
-      <CCard style={{ backgroundColor: "#636f83" }}>
+    <CCol sm='12' md='6'>
+      <CCard style={{ backgroundColor: '#636f83' }}>
         <CCardHeader
-          style={{ backgroundColor: "#636f83", color: "whitesmoke" }}
+          style={{ backgroundColor: '#636f83', color: 'whitesmoke' }}
         >
           <b>{roomName}</b>
         </CCardHeader>
@@ -31,6 +30,7 @@ const SensorRoom = ({ roomName, roomId, allDevice, msg }) => {
                       status={item.state}
                       icon={item.icon}
                       topics={topics}
+                      msgSensor={msgSensor}
                     />
                   )
                 );

@@ -1,22 +1,19 @@
-import React, { useEffect, useState } from "react";
-import { CCardGroup, CCol, CRow, CWidgetProgressIcon } from "@coreui/react";
-import CIcon from "@coreui/icons-react";
-import { useSelector } from "react-redux";
-import Alert from "../../../components/Alert/Alert";
-import Spinner from "../../../components/Spinner/Spinner";
-import SensorRoom from "../../../components/Mqtt/SensorRoom";
-import ChartDashboard from "../../../components/Charts/ChartDashboard";
-import LivingRoom from "../../../components/Mqtt/LivingRoom";
-import BedRoom from "../../../components/Mqtt/BedRoom";
+import React, { useEffect, useState } from 'react';
+import { CCardGroup, CCol, CRow, CWidgetProgressIcon } from '@coreui/react';
+import CIcon from '@coreui/icons-react';
+import { useSelector } from 'react-redux';
+import Alert from '../../../components/Alert/Alert';
+import Spinner from '../../../components/Spinner/Spinner';
+import SensorRoom from '../../../components/Mqtt/SensorRoom';
+import ChartDashboard from '../../../components/Charts/ChartDashboard';
 
-const Dashboard = () =>
-{
-    const data = useSelector((state) => state.mqtt);
-    const { msg, msgSensor } = data;
+const Dashboard = () => {
+  const data = useSelector((state) => state.mqtt);
+  const { msg, msgSensor } = data;
 
-    msg.forEach((element) => {
-      console.log(element.topic.slice(element.topic.indexOf("/") + 1));
-    });
+  msg.forEach((element) => {
+    console.log(element.topic.slice(element.topic.indexOf('/') + 1));
+  });
   const [weather, setWeather] = useState({});
   const [isLoaded, setIsLoaed] = useState(false);
   useEffect(() => {
@@ -46,13 +43,13 @@ const Dashboard = () =>
     <>
       <CRow>
         <CCol>
-          <CIcon name="cil-cloudy" height="36" />
-          {"   "}
-          <span className="h3">Thời tiết hôm nay</span>
+          <CIcon name='cil-cloudy' height='36' />
+          {'   '}
+          <span className='h3'>Thời tiết hôm nay</span>
         </CCol>
       </CRow>
       <CRow>
-        <CCol sm="6">
+        <CCol sm='6'>
           {!isLoaded ? (
             <Spinner />
           ) : (
@@ -61,15 +58,15 @@ const Dashboard = () =>
                 <CCol>
                   <CWidgetProgressIcon
                     header={`${weather.main.humidity} %`}
-                    text="Độ ẩm"
-                    color="gradient-info"
+                    text='Độ ẩm'
+                    color='gradient-info'
                   ></CWidgetProgressIcon>
                 </CCol>
                 <CCol>
                   <CWidgetProgressIcon
                     header={`${weather.wind.speed} m/s`}
-                    text="Gió"
-                    color="gradient-success"
+                    text='Gió'
+                    color='gradient-success'
                   ></CWidgetProgressIcon>
                 </CCol>
               </CRow>
@@ -77,72 +74,72 @@ const Dashboard = () =>
                 <CCol>
                   <CWidgetProgressIcon
                     header={`${weather.main.feels_like} °c`}
-                    text="Nhiệt độ cảm nhận"
-                    color="gradient-warning"
+                    text='Nhiệt độ cảm nhận'
+                    color='gradient-warning'
                   ></CWidgetProgressIcon>
                 </CCol>
                 <CCol>
                   <CWidgetProgressIcon
                     header={`${weather.main.temp} °c`}
-                    text="Nhiệt độ"
-                    color="gradient-primary"
+                    text='Nhiệt độ'
+                    color='gradient-primary'
                   ></CWidgetProgressIcon>
                 </CCol>
               </CRow>
             </>
           )}
         </CCol>
-        <CCol sm="6">
-          <CCardGroup style={{ height: "91%" }} className="mb-4">
+        <CCol sm='6'>
+          <CCardGroup style={{ height: '91%' }} className='mb-4'>
             {loadDevice ? (
-              ""
+              ''
             ) : errDevice ? (
-              <Alert color="danger" msg={errDevice.message} />
+              <Alert color='danger' msg={errDevice.message} />
             ) : (
               <CWidgetProgressIcon
                 header={`${dataDevice.count}`}
-                text="Số thiết bị"
-                color="gradient-info"
+                text='Số thiết bị'
+                color='gradient-info'
                 inverse
               >
-                <CIcon name="cil-memory" height="36" />
+                <CIcon name='cil-memory' height='36' />
               </CWidgetProgressIcon>
             )}
 
             {loadUser ? (
-              ""
+              ''
             ) : errUser ? (
-              <Alert color="danger" msg={errUser.message} />
+              <Alert color='danger' msg={errUser.message} />
             ) : (
               <CWidgetProgressIcon
                 header={`${dataUser.count}`}
-                text="Số người trong hệ thống"
-                color="gradient-success"
+                text='Số người trong hệ thống'
+                color='gradient-success'
                 inverse
               >
-                <CIcon name="cil-people" height="36" />
+                <CIcon name='cil-people' height='36' />
               </CWidgetProgressIcon>
             )}
 
             {loadRoom ? (
-              ""
+              ''
             ) : errRoom ? (
-              <Alert color="danger" msg={errRoom.message} />
+              <Alert color='danger' msg={errRoom.message} />
             ) : (
               <CWidgetProgressIcon
                 header={`${dataRoom.count}`}
-                text="Số phòng"
-                color="gradient-warning"
+                text='Số phòng'
+                color='gradient-warning'
                 inverse
               >
-                <CIcon name="cil-home" height="36" />
+                <CIcon name='cil-home' height='36' />
               </CWidgetProgressIcon>
             )}
           </CCardGroup>
         </CCol>
       </CRow>
       {loadRoom ? (
-        ""
+        ''
       ) : (
         <CRow>
           <CCol>
@@ -157,7 +154,7 @@ const Dashboard = () =>
       dataRoom === undefined ? (
         <Spinner />
       ) : errRoom ? (
-        <Alert color="danger" msg={errRoom.message} />
+        <Alert color='danger' msg={errRoom.message} />
       ) : (
         <CRow>
           {dataRoom.data.map((room) => (
@@ -167,9 +164,10 @@ const Dashboard = () =>
               roomName={room.name}
               roomId={room._id}
               msg={msg}
+              msgSensor={msgSensor}
             />
           ))}
-              {/* <LivingRoom />
+          {/* <LivingRoom />
               <BedRoom /> */}
         </CRow>
       )}

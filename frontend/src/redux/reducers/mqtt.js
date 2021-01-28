@@ -2,8 +2,8 @@ import {
   CONNECT,
   DISCONNECT,
   MESSAGE_ARRIVED,
-  SENSOR
-} from "../constants/mqttConstant";
+  SENSOR,
+} from '../constants/mqttConstant';
 
 const initialState = {
   isConnect: false,
@@ -17,7 +17,7 @@ export const mqtt = (state = initialState, action) => {
       return {
         isConnect: true,
         msg: [],
-        msgSensor: [],
+        msgSensor: {},
       };
     case MESSAGE_ARRIVED:
       return {
