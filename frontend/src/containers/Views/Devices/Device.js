@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
-import { CCard, CCardBody, CCol, CRow, CDataTable, CCardHeader, CButton, CBadge, CSwitch } from '@coreui/react';
-import Spinner from '../../../components/LoadingIndicator/Spinner';
-import Alert from '../../../components/Alert/Alerts';
+import { CCard, CCardBody, CCol, CRow, CDataTable, CCardHeader, CButton, CBadge } from '@coreui/react';
+import Spinner from '../../../components/Spinner/Spinner';
+import Alert from '../../../components/Alert/Alert';
 import Modal from '../../../components/Modal/Modal'
 import FormSchedule from '../../FormSubmit/FormSchedule';
 import ListUser from '../../FormSubmit/ListUser'
@@ -39,10 +39,22 @@ const Device = ({ match }) => {
     }
   ]
   const fieldsHistories = [
-    { key: 'user', _style: { width: '20%' } },
-    { key: 'state', _style: { width: '20%' } },
-    { key: 'createdAt', _style: { width: '20%' } },
-  ]
+    { key: "user", _style: { width: "20%" } },
+    { key: "typeAction", _style: { width: "20%" } },
+    { key: "state", _style: { width: "20%" } },
+    { key: "device", _style: { width: "20%" } },
+    { key: "createdAt", _style: { width: "20%" } },
+  ];
+  const getBadge = (state) => {
+    switch (state) {
+      case "on":
+        return "success";
+      case "off":
+        return "danger";
+      default:
+        return "primary";
+    }
+  };
 
   useEffect(() => {
     Promise.all([
@@ -62,39 +74,39 @@ const Device = ({ match }) => {
             ) : errSchedule ? (
               <Alert color="danger" msg={errSchedule.message} />
             ) : (
-                  <CRow>
-                    <CCol sm={12} >
-                      <span className="h4">List schedule in device</span>
-                    </CCol>
-                    <CCol sm={12}>
-                      <CCard>
-                        <CCardHeader >
-                          <Modal
-                            type="Add schedule"
-                            title="Schedule info"
-                            body={<FormSchedule />}
-                            size="lg"
-                            color="info"
-                          />
-                        </CCardHeader>
-                        <CCardBody>
-                          <CDataTable
-                            items={dataSchedule.data}
-                            fields={fields}
-                            columnFilter
-                            tableFilter
-                            footer
-                            itemsPerPageSelect
-                            itemsPerPage={5}
-                            hover
-                            sorter
-                            pagination
-                          />
-                        </CCardBody>
-                      </CCard>
-                    </CCol>
-                  </CRow>
-                )}
+              <CRow>
+                <CCol sm={12}>
+                  <span className="h4">List schedule in device</span>
+                </CCol>
+                <CCol sm={12}>
+                  <CCard>
+                    <CCardHeader>
+                      <Modal
+                        type="Add schedule"
+                        title="Schedule info"
+                        body={<FormSchedule />}
+                        size="lg"
+                        color="info"
+                      />
+                    </CCardHeader>
+                    <CCardBody>
+                      <CDataTable
+                        items={dataSchedule.data}
+                        fields={fields}
+                        columnFilter
+                        tableFilter
+                        footer
+                        itemsPerPageSelect
+                        itemsPerPage={5}
+                        hover
+                        sorter
+                        pagination
+                      />
+                    </CCardBody>
+                  </CCard>
+                </CCol>
+              </CRow>
+            )}
           </>
         </CCol>
 
@@ -107,66 +119,75 @@ const Device = ({ match }) => {
             ) : errUsers ? (
               <Alert color="danger" msg={errUsers.message} />
             ) : (
-                  <CRow>
-                    <CCol sm={12} >
-                      <span className="h4">List user in used device</span>
-                    </CCol>
-                    <CCol sm={12}>
-                      <CCard>
-                        <CCardHeader >
-                          <Modal
-                            type="Add user to use this device"
-                            title="User info"
-                            body={<ListUser deviceId={match.params.id} />}
-                            size="lg"
-                            color="info"
-                          />
-                        </CCardHeader>
-                        <CCardBody>
-                          <CDataTable
-                            items={dataUsers && dataUsers.data && dataUsers.data.users}
-                            fields={fieldUser}
-                            columnFilter
-                            tableFilter
-                            footer
-                            itemsPerPageSelect
-                            itemsPerPage={5}
-                            hover
-                            sorter
-                            pagination
-                            scopedSlots={{
-                              'remove':
-                                (item, index) => {
-                                  return (
-                                    <td className="py-2">
-                                      <Modal
-                                        type="Remove"
-                                        title="Remove User for this device"
-                                        body={<>
-                                          <b>{`Do you want delete ${ item.name }?`}</b>
-                                          <CButton
-                                            color="danger"
-                                            onClick={() => { dispatch(removeUserToUseDevice(match.params.id, item._id)) }}
-                                            style={{ float: "right" }}
-                                          >
-                                            Remove
-                                    </CButton>
-                                        </>}
-                                        size="sm"
+              <CRow>
+                <CCol sm={12}>
+                  <span className="h4">List user in used device</span>
+                </CCol>
+                <CCol sm={12}>
+                  <CCard>
+                    <CCardHeader>
+                      <Modal
+                        type="Add user to use this device"
+                        title="User info"
+                        body={<ListUser deviceId={match.params.id} />}
+                        size="lg"
+                        color="info"
+                      />
+                    </CCardHeader>
+                    <CCardBody>
+                      <CDataTable
+                        items={
+                          dataUsers && dataUsers.data && dataUsers.data.users
+                        }
+                        fields={fieldUser}
+                        columnFilter
+                        tableFilter
+                        footer
+                        itemsPerPageSelect
+                        itemsPerPage={5}
+                        hover
+                        sorter
+                        pagination
+                        scopedSlots={{
+                          remove: (item, index) => {
+                            return (
+                              <td className="py-2">
+                                <Modal
+                                  type="Remove"
+                                  title="Remove User for this device"
+                                  body={
+                                    <>
+                                      <b>{`Do you want delete ${item.name}?`}</b>
+                                      <CButton
                                         color="danger"
-                                      />
-                                    </td>
-                                  )
-                                },
-                            }}
-
-                          />
-                        </CCardBody>
-                      </CCard>
-                    </CCol>
-                  </CRow>)}
+                                        onClick={() => {
+                                          dispatch(
+                                            removeUserToUseDevice(
+                                              match.params.id,
+                                              item._id
+                                            )
+                                          );
+                                        }}
+                                        style={{ float: "right" }}
+                                      >
+                                        Remove
+                                      </CButton>
+                                    </>
+                                  }
+                                  size="sm"
+                                  color="danger"
+                                />
+                              </td>
+                            );
+                          },
+                        }}
+                      />
+                    </CCardBody>
+                  </CCard>
+                </CCol>
+              </CRow>
+            )}
           </>
-
         </CCol>
       </CRow>
       {/* History of device */}
@@ -175,38 +196,46 @@ const Device = ({ match }) => {
       ) : errHistory ? (
         <Alert color="danger" msg={errHistory.message} />
       ) : (
-            <CRow>
-              <CCol sm={12} >
-                <span className="h4">History of device</span>
-              </CCol>
-              <CCol sm={12}>
-                <CDataTable
-                  items={dataHistory && dataHistory.data}
-                  fields={fieldsHistories}
-                  columnFilter
-                  tableFilter
-                  footer
-                  itemsPerPageSelect
-                  itemsPerPage={5}
-                  hover
-                  sorter
-                  pagination
-                  scopedSlots={{
-                    'state':
-                      (item) => (
-                        <td>
-                          {item.state === true ? <CBadge color="success">
-                            Bật
-                            </CBadge> : <CBadge color="danger">Tắt</CBadge>}
-                        </td>
-                      )
-                  }}
-                />
-              </CCol>
-            </CRow>
-          )}
+        <CRow>
+          <CCol sm={12}>
+            <span className="h4">History of device</span>
+          </CCol>
+          <CCol sm={12}>
+            <CDataTable
+              items={dataHistory && dataHistory.data}
+              fields={fieldsHistories}
+              columnFilter
+              tableFilter
+              footer
+              itemsPerPageSelect
+              itemsPerPage={10}
+              hover
+              sorter
+              pagination
+              scopedSlots={{
+                state: (item) => (
+                  <td>
+                    <CBadge color={getBadge(item.state)}>
+                      {item.state === "on"
+                        ? "Bật"
+                        : item.state === "off"
+                        ? "Tắt"
+                        : "Cập nhật"}
+                    </CBadge>
+                  </td>
+                ),
+                device: (item) => (
+                  <td>
+                    <b>{item.deviceName}</b>{" "}
+                  </td>
+                ),
+              }}
+            />
+          </CCol>
+        </CRow>
+      )}
     </>
-  )
+  );
 }
 
 export default Device

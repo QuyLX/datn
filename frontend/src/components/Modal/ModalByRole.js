@@ -7,14 +7,15 @@ import {
   CModalFooter,
 } from "@coreui/react";
 
-const Modal = ({ type, title, body, size, color }) => {
+const ModalByRole = ({ type, title, body, size, color, role }) =>
+{
   const [modal, setModal] = useState(false);
   const toggle = () => {
     setModal(!modal);
   };
   return (
     <>
-      <CButton onClick={toggle} className="mr-1" color={color}>
+      <CButton disabled={role} onClick={toggle} className="mr-1" color={color}>
         {type}
       </CButton>
       <CModal show={modal} onClose={toggle} size={size}>
@@ -30,4 +31,4 @@ const Modal = ({ type, title, body, size, color }) => {
   );
 };
 
-export default Modal;
+export default ModalByRole;

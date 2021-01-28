@@ -3,7 +3,7 @@ import { CButton, CModal, CModalHeader, CModalBody, CModalFooter } from '@coreui
 import ListUserView from '../../containers/FormSubmit/ListUserView'
 import { getUsersInused } from '../../redux/actions/user'
 import { useSelector, useDispatch } from "react-redux"
-import Alert from '../Alert/Alerts'
+import Alert from '../Alert/Alert'
 const ModalUser = ({ type, title, size, color, deviceId }) => {
     const dispatch = useDispatch();
     const userListPerDevice = useSelector(state => state.userListPerDevice);

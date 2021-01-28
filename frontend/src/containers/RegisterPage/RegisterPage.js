@@ -17,7 +17,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 import { register } from '../../redux/actions/auth';
-import Alert from "../../components/Alert/Alerts";
+// import Alert from "../../components/Alert/Alerts";
 
 const RegisterPage = ({ isAuthenticated, error, register }) => {
   const [form, setForm] = useState({

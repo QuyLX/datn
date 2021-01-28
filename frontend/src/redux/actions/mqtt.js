@@ -1,36 +1,59 @@
-import { CONNECT, DISCONNECT, MESSAGE_ARRIVED} from '../constants/mqttConstant';
-import { mqttClient } from '../../utils/mqtt'
+import {
+  CONNECT,
+  DISCONNECT,
+  MESSAGE_ARRIVED,
+  SENSOR,
+} from "../constants/mqttConstant";
+import mqtt from "mqtt";
 
-export const connect = () => dispatch => {
-    try {
-        mqttClient.on("connect", () => {
-        console.log("connected");
-        dispatch({type: CONNECT});
-        mqttClient.subscribe("a", { qos: 1 }, (error) => {
-            error && dispatch({type: DISCONNECT})
-        });
-        //handle incoming messages
-         mqttClient.on('message',  (topic, message, packet) => {
-            dispatch({type: MESSAGE_ARRIVED, data: message})
-            console.log("message is " + message);
-            console.log("topic is " + topic);
-            console.log("packet is " + JSON.parse(packet));
-        });
-        //handle errors
-        mqttClient.on("error",  (error) =>{
-            console.log(error);
-            dispatch({type: DISCONNECT})
-        });
+const connectOptions = {
+  username: process.env.REACT_APP_MQTT_USERNAME,
+  password: process.env.REACT_APP_MQTT_PASSWORD,
+  keepalive: 120,
+  reconnectPeriod: 5000,
+};
 
-})
-    } catch (error) {
-     dispatch({type: DISCONNECT})
+const mqttClient = mqtt.connect(
+  process.env.REACT_APP_MQTT_BROKER_URL,
+  connectOptions
+);
 
-    }
-
-}
-export const disconnect = () => dispatch => {
+export const connect = () => (dispatch) => {
+  mqttClient.on("connect", () => {
+    dispatch({ type: CONNECT });
+  });
+  mqttClient.on("error", () => {
+    dispatch({ type: DISCONNECT });
     mqttClient.end();
-    dispatch({type: DISCONNECT})
-}
+  });
+  mqttClient.on("message", (topic, message, packet) => {
+    topic === "600869dc38aeae2a8076ff79/60086a2238aeae2a8076ff7d"
+      ? dispatch(sensor(message.toString(), topic))
+      : dispatch(handleMsg(message.toString(), topic));
+  });
+};
 
+export const disconnect = () => (dispatch) => {
+  dispatch({ type: DISCONNECT });
+  mqttClient.end();
+};
+
+export const handleMsg = (message, topic) => (dispatch) => {
+  dispatch({
+    type: MESSAGE_ARRIVED,
+    payload: { msg: message, topic: topic },
+  });
+};
+export const sensor = (message, topic) => (dispatch) =>
+{
+  const msg = message.split(' ')
+  dispatch({
+    type: SENSOR,
+    payload: { msg: msg, topic: topic },
+  });
+};
+export const subscribe = (topics) => (dispatch) => {
+  mqttClient.subscribe(topics, { qos: 1 }, (error) => {
+    error && dispatch({ type: DISCONNECT });
+  });
+};

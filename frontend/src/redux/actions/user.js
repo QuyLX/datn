@@ -56,7 +56,6 @@ export const getUser = id => async dispatch => {
     }
 }
 
-
 export const createUser = user => async dispatch => {
     try {
         dispatch({ type: USER_CREATE_REQUEST });

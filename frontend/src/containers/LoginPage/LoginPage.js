@@ -18,7 +18,7 @@ import CIcon from '@coreui/icons-react'
 import { connect } from 'react-redux'
 import PropTypes from 'prop-types'
 import { login } from '../../redux/actions/auth'
-import Alert from "../../components/Alert/Alerts";
+// import Alert from "../../components/Alert/Alerts";
 
 const Login = ({ login, error, isAuthenticated }) => {
   const [form, setForm] = useState({

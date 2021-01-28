@@ -19,9 +19,6 @@ exports.getDevices = asyncHandler(async (req, res, next) => {
             data: devices
         });
     } else {
-        if (req.user.role !== "admin") {
-            return next(new ErrorResponse(`User's role is not authorized`, 401))
-        }
         res.status(200).json(res.advancedResults);
     }
 });
@@ -156,7 +153,7 @@ exports.controlDevice = asyncHandler(async (req, res, next) => {
     const data = {
         state: req.body.state
     }
-    mqttClient.publish(topic, JSON.stringify(data), { qos: 1, retain: true });
+    mqttClient.publish(topic, req.body.state, { qos: 1, retain: true });
 
     const history = {
         user: req.user.name,

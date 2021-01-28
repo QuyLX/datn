@@ -24,7 +24,6 @@ const FormSchedule = ({ title, description, state, timeStart, timeEnd, id }) => 
     const onChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value })
     }
-    console.log(form);
     const onSubmit = (e) => {
         e.preventDefault();
         distpatch(updateSchedule(id, form));
@@ -56,14 +55,14 @@ const FormSchedule = ({ title, description, state, timeStart, timeEnd, id }) => 
                 </CCol>
             </CFormGroup>
             <CFormGroup row>
-                <CCol md="3"><CLabel>On/Off</CLabel></CCol>
+                <CCol md="3"><CLabel>On</CLabel></CCol>
                 <CCol md="9">
                     {state === true ? <CFormGroup variant="checkbox" className="checkbox">
                         <CInputCheckbox id="state" name="state" defaultChecked />
-                        <CLabel variant="checkbox" className="form-check-label" htmlFor="state">On/Off</CLabel>
+                        {/* <CLabel variant="checkbox" className="form-check-label" htmlFor="state">On</CLabel> */}
                     </CFormGroup> : <CFormGroup variant="checkbox" className="checkbox">
                             <CInputCheckbox id="state" name="state" />
-                            <CLabel variant="checkbox" className="form-check-label" htmlFor="state">On/Off</CLabel>
+                            <CLabel variant="checkbox" className="form-check-label" htmlFor="state">On</CLabel>
                         </CFormGroup>}
 
                 </CCol>
@@ -99,7 +98,7 @@ const FormSchedule = ({ title, description, state, timeStart, timeEnd, id }) => 
             <CButton
                 type="submit"
                 style={{ float: "right" }}
-                color="success"
+                color="primary"
             >
                 Submit
             </CButton>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import {
     CCol,
     CForm,
@@ -7,7 +7,6 @@ import {
     CInput,
     CLabel,
     CButton,
-    CInputCheckbox
 } from '@coreui/react'
 import { useDispatch } from 'react-redux';
 import Editor from 'react-simple-code-editor';
@@ -19,18 +18,14 @@ const FormDevice = ({ name, description, icon, state ,config, id, roomId }) => {
     const [code, setCode] = useState(`{
         // Config device in here
 }`);
-
-    const [checked, setChecked] = useState(state === "on" ? true : false);
     const distpatch = useDispatch();
     const [form, setForm] = useState({
         name: name || "",
         description: description || "",
-        state: state || "on",
         icon: icon || "",
         config: config || ""
     })
     form.config = code;
-    checked ? form.state = "on" : form.state = "off"
     const onChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value })
     }
@@ -93,16 +88,6 @@ const FormDevice = ({ name, description, icon, state ,config, id, roomId }) => {
                 </CCol>
             </CFormGroup>
             <CFormGroup row>
-                <CCol md="3"><CLabel>On/Off</CLabel></CCol>
-                <CCol md="9">
-                    <CFormGroup variant="checkbox" className="checkbox">
-                        <CInputCheckbox onChange={() => setChecked(!checked)} id="state" name="state" defaultChecked={checked} />
-                        <CLabel variant="checkbox" className="form-check-label" htmlFor="state">On/Off</CLabel>
-                    </CFormGroup>
-
-                </CCol>
-            </CFormGroup>
-            <CFormGroup row>
                 <CCol md="3">
                     <CLabel htmlFor="config">Config</CLabel>
                 </CCol>
@@ -122,7 +107,7 @@ const FormDevice = ({ name, description, icon, state ,config, id, roomId }) => {
             <CButton
                 type="submit"
                 style={{ float: "right" }}
-                color="success"
+                color="primary"
             >
                 Submit
             </CButton>

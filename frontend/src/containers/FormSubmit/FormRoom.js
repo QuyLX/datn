@@ -81,7 +81,7 @@ const FormRoom = ({ name, description, icon, id }) => {
             <CButton
                 type="submit"
                 style={{ float: "right" }}
-                color="success"
+                color="primary"
             >
                 Submit
             </CButton>

@@ -7,8 +7,6 @@ import {
   CToggler,
 } from '@coreui/react'
 import { HeaderNav, HeaderBrand, SubHeader } from '../../components/DefaultLayout/Header'
-import Alerts from '../../components/Alert/Alerts'
-
  
 const TheHeader = ({ sidebarShow, changeState }) => {
   const toggleSidebar = () => {
@@ -34,7 +32,6 @@ const TheHeader = ({ sidebarShow, changeState }) => {
         onClick={toggleSidebar}
       />
       <HeaderBrand />
-      <Alerts />
       <HeaderNav />
       <SubHeader />
     </CHeader>
